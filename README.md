@@ -1,2 +1,1 @@
-#
-Dev application project.
+# Dev application project.

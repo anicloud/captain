@@ -6,25 +6,60 @@
   <artifactId>captain</artifactId>
   <version>1.0</version>
   <packaging>war</packaging>
-  <name>Development Web Application</name>
+  <name>Developer Application</name>
 
   <properties>
-    <java-version>1.8</java-version>
-    <org.springframework-version>4.1.6.RELEASE</org.springframework-version>
+    <java-source-version>1.8</java-source-version>
+    <java-target-version>1.8</java-target-version>
+    <org.springframework-version>4.3.1.RELEASE</org.springframework-version>
+    <spring.security-version>4.1.1.RELEASE</spring.security-version>
+    <cas.client-version>3.4.1</cas.client-version>
     <org.mysql.connector.version>5.1.24</org.mysql.connector.version>
-    <jackson-version>2.4.0</jackson-version>
+    <jackson-version>2.8.0</jackson-version>
     <commons-logging-version>1.2</commons-logging-version>
     <log4j-version>1.2.16</log4j-version>
     <slf4j-version>1.7.12</slf4j-version>
     <org.aspectj-version>1.8.0</org.aspectj-version>
-    <org.junit.version>4.11</org.junit.version>
-    <activemq-version>5.7.0</activemq-version>
+    <org.junit-version>4.11</org.junit-version>
+    <activemq-core-version>5.7.0</activemq-core-version>
+    <activemq-version>5.11.4</activemq-version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
 
   <dependencies>
+    <!-- octopus -->
+    <dependency>
+      <groupId>com.ani.octopus</groupId>
+      <artifactId>octopus-commons</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ani.octopus.antenna</groupId>
+      <artifactId>octopus-antenna</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <!-- bus -->
+    <dependency>
+      <groupId>com.ani.bus.commons</groupId>
+      <artifactId>device-bus-commons</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.ani.bus.device</groupId>
+      <artifactId>device-bus</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+    <!-- CAS -->
+    <dependency>
+      <groupId>org.jasig.cas.client</groupId>
+      <artifactId>cas-client-core</artifactId>
+      <version>${cas.client-version}</version>
+    </dependency>
+
     <!-- apache commons -->
     <dependency>
       <groupId>commons-logging</groupId>
@@ -48,6 +83,28 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>${slf4j-version}</version>
+    </dependency>
+
+    <!-- activemq -->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-core</artifactId>
+      <version>${activemq-core-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-broker</artifactId>
+      <version>${activemq-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-pool</artifactId>
+      <version>${activemq-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-spring</artifactId>
+      <version>${activemq-version}</version>
     </dependency>
 
     <!-- AspectJ -->
@@ -141,13 +198,35 @@
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
-      <artifactId>spring-orm</artifactId>
+      <artifactId>spring-websocket</artifactId>
       <version>${org.springframework-version}</version>
     </dependency>
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-websocket</artifactId>
-      <version>${org.springframework-version}</version>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <version>${spring.security-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-web</artifactId>
+      <version>${spring.security-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>${spring.security-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-cas</artifactId>
+      <version>${spring.security-version}</version>
+    </dependency>
+
+    <!-- servlet -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
     </dependency>
 
     <!-- jackson -->
@@ -167,4 +246,37 @@
       <version>${jackson-version}</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.3</version>
+        <configuration>
+          <source>${java-source-version}</source>
+          <target>${java-target-version}</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <warSourceExcludes>src/**</warSourceExcludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <port>9000</port>
+          <uriEncoding>UTF-8</uriEncoding>
+          <server>tomcat7</server>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
 </project>

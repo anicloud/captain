@@ -23,7 +23,7 @@ import java.util.*;
  * Created by huangbin on 7/7/16.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+//@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/service/device")
 public class DeviceController {
     @Resource

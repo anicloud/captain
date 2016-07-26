@@ -15,7 +15,11 @@ module.exports = {
     index: [
       path.resolve(__dirname, 'app/index.js')
     ],
-    vendor: ['react', 'react-dom']
+    vendor: [
+      'react', 'react-dom', 'react-router',
+      'redux', 'react-redux', 'react-router-redux', 'redux-thunk',
+      'lodash', 'reqwest'
+    ]
   },
   output: {
     path: path.resolve(__dirname, './public'),
@@ -24,13 +28,16 @@ module.exports = {
   },
   resolve: {
     extension: ['', '.jsx', '.js', '.json'],
-    alias: {}
+    alias: {
+    }
+  },
+  externals: {
   },
   module: {
     loaders: [
       {
         test: /\.js[x]?$/,
-        loaders: ['react-hot', 'babel'],
+        loaders: ['babel'],
         exclude: path.resolve(__dirname, 'node_modules')
       },
       {
@@ -53,33 +60,33 @@ module.exports = {
   },
   plugins: [
     definePlugin,
-    new ExtractTextPlugin("main.[hash:8].css", {
-      allChunks: true,
-      disable: false
-    }),
-    // new uglifyJsPlugin({
-    //   compress: {
-    //     warnings: false
-    //   }
-    // }),
-    new HtmlWebpackPlugin({
-      title: 'Captain',
-      template: './app/index.html'
-    }),
-    new webpack.optimize.MinChunkSizePlugin({
+    new uglifyJsPlugin({
       compress: {
         warnings: false
       }
     }),
+    new HtmlWebpackPlugin({
+      title: 'Captain',
+      template: './app/index.html'
+    }),
+    new webpack.optimize.LimitChunkCountPlugin({
+      maxChunks: 15
+    }),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 10000,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin('commons.js'),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin({
       minSizeReduce: 1.5,
       moveToParents: true
     }),
-    new ExtractTextPlugin("app.css", {
-      allChunks: true,
-      disable: false
+    new ExtractTextPlugin("app.[hash:8].css", {
+      allChunks: true
     })
   ]
 };

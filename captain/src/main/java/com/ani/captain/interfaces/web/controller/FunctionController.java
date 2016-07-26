@@ -25,7 +25,7 @@ import java.util.List;
  * Created by huangbin on 7/7/16.
  */
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
+//@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/service/function")
 public class FunctionController {
     @Resource

@@ -24,7 +24,10 @@ module.exports = {
       'webpack-dev-server/client?http://localhost:8080',
       path.resolve(__dirname, 'app/index.js')
     ],
-    vendor: ['react', 'react-dom']
+    vendor: [
+      'react', 'react-dom', 'react-router',
+      'redux', 'react-redux', 'redux-thunk'
+    ]
   },
 
   output: {

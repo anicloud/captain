@@ -40,16 +40,20 @@ class Status extends Component {
         {props.device.deviceId ?
           <div className="info">
             <div className="info-item">
+              <div className="key">设备类型：</div>
+              <div className="value">{props.device.masterId ? '从设备' : '主设备'}</div>
+            </div>
+            <div className="info-item">
+              <div className="key">设备ID：</div>
+              <div className="value">{props.device.deviceId}</div>
+            </div>
+            <div className="info-item">
               <div className="key">设备状态：</div>
               <div className="value">{props.device.state}</div>
             </div>
             <div className="info-item">
               <div className="key">设备名称：</div>
               <div className="value">{props.device.name}</div>
-            </div>
-            <div className="info-item">
-              <div className="key">设备ID：</div>
-              <div className="value">{props.device.deviceId}</div>
             </div>
             <div className="info-item">
               <div className="key">描述：</div>
@@ -75,6 +79,12 @@ class Status extends Component {
               <div className="key">功能数：</div>
               <div className="value">{props.device.functions ? props.device.functions.length : 0}</div>
             </div>
+            {props.device.masterId &&
+              <div className="info-item">
+                <div className="key">主设备ID：</div>
+                <div className="value">{props.device.masterId}</div>
+              </div>
+            }
             {!props.device.masterId &&
               <div className="info-item">
                 <div className="key">从设备数：</div>

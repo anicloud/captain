@@ -2,30 +2,11 @@
  * Created by huangbin on 6/28/16.
  */
 
-import React, {Component, PropTypes} from 'react'
-import {connect} from 'react-redux'
-
-import {noop} from '../utils'
+import React, {Component, PropTypes} from 'react';
+import {noop} from '../utils';
+import './Menu.less';
 
 class Menu extends Component {
-
-  static propTypes = {
-    defaultSelectedKeys: PropTypes.arrayOf(PropTypes.string),
-    selectedKeys: PropTypes.arrayOf(PropTypes.string),
-    defaultOpenKeys: PropTypes.arrayOf(PropTypes.string),
-    openKeys: PropTypes.arrayOf(PropTypes.string),
-    onClick: PropTypes.func,
-    onSelect: PropTypes.func,
-    onOpen: PropTypes.func
-  };
-
-  static defaultProps = {
-    defaultSelectedKeys: [],
-    defaultOpenKeys: [],
-    onClick: noop,
-    onSelect: noop,
-    onOpen: noop
-  };
 
   constructor(props) {
     super(props);
@@ -39,33 +20,26 @@ class Menu extends Component {
 
   onSelect(info) {
     let selectedKeys = this.state.selectedKeys;
-    if (!(info.key in selectedKeys)) {
-      selectedKeys = [info.key];
-      this.setState({selectedKeys});
-      this.props.onSelect(Object.assign({}, info, {selectedKeys}))
-    }
+    // if (!selectedKeys.includes(info.key)) {
+    //   selectedKeys.push(info.key);
+    // } else {
+    //   selectedKeys = selectedKeys.filter(key => key !== info.key);
+    // }
+    selectedKeys = [info.key];
+    this.setState({selectedKeys});
+    this.props.onSelect(Object.assign({}, info, {selectedKeys}));
   }
 
   onOpen(info) {
     let needUpdate = false;
     let openKeys = this.state.openKeys;
-    if (info.open) {
-      if (openKeys.indexOf(info.key) === -1) {
-        openKeys = openKeys.concat(info.key);
-        needUpdate = true;
-      }
+    if (!openKeys.includes(info.key)) {
+      openKeys.push(info.key);
     } else {
-      const index = openKeys.indexOf(info.key);
-      if (index !== -1) {
-        openKeys.splice(index, 1);
-        needUpdate = true;
-      }
+      openKeys = openKeys.filter(key => key !== info.key);
     }
-    if (needUpdate) {
-      this.state.openKeys = openKeys;
-      this.setState({openKeys});
-      this.props.onOpen(info);
-    }
+    this.setState({openKeys});
+    this.props.onOpen(Object.assign({}, info, {openKeys}));
   }
 
   getChildKey(child, index) {
@@ -81,28 +55,41 @@ class Menu extends Component {
       parentMenu: this,
       selectedKeys: state.selectedKeys,
       openKeys: state.openKeys,
-      selected: state.selectedKeys.indexOf(key) !== -1,
-      open: state.openKeys.indexOf(key) !== -1,
+      selected: state.selectedKeys.includes(key),
+      open: state.openKeys.includes(key),
       onSelect: this.onSelect,
       onOpen: this.onOpen
     };
     return React.cloneElement(child, extraProps);
   }
 
-  renderChildren(props) {
-    return React.Children.map(props.children, (child, index) => {
-      return this.renderMenuItem(child, index);
-    });
-  }
-
   render() {
+    const state = this.state;
     const props = this.props;
     return (
       <ul className='menu'>
-        {this.renderChildren(props)}
+        {React.Children.map(props.children, (c, i) => {
+          return this.renderMenuItem(c, i);
+        })}
       </ul>
     )
   }
 }
 
-export default connect()(Menu)
+Menu.propTypes = {
+  defaultSelectedKeys: PropTypes.array,
+  defaultOpenKeys: PropTypes.array,
+  onClick: PropTypes.func,
+  onSelect: PropTypes.func,
+  onOpen: PropTypes.func
+};
+
+Menu.defaultProps = {
+  defaultSelectedKeys: [],
+  defaultOpenKeys: [],
+  onClick: noop,
+  onSelect: noop,
+  onOpen: noop
+};
+
+export default Menu

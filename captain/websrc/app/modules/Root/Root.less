@@ -1,0 +1,113 @@
+@import "../../styles/layout";
+
+#app {
+  position: relative;
+  height: 100%;
+  .app-wrapper {
+    height: 100%;
+  }
+}
+
+@sidebar-width: 260px;
+
+.app-content {
+  position: relative;
+  height: 100%;
+  width: calc(~"100% - @{sidebar-width}");
+  margin-left: @sidebar-width;
+  //overflow: auto;
+}
+
+.sidebar {
+  position: fixed;
+  width: @sidebar-width;
+  height: 100%;
+  z-index: 100;
+  .brand {
+    @brand-height: 80px;
+    height: @brand-height;
+    padding-left: 10px;
+    background-color: @primary-color;
+    border-bottom: 1px solid darken(@primary-color, 2);
+    a {
+      font-size: 24px;
+      font-style: italic;
+      text-align: left;
+      line-height: @brand-height;
+      color: @text-color-light;
+      &:hover {
+        color: @secondary-color;
+      }
+    }
+  }
+  .user {
+    overflow: hidden;
+    padding: 16px 0;
+    background-color: @primary-color;
+    border-bottom: 1px solid darken(@primary-color, 2);
+    .avatar {
+      float: left;
+      padding-left: 10px;
+      @avatar-size: 40px;
+      width: @avatar-size + 10px;
+      height: @avatar-size + 10px;
+      img {
+        width: @avatar-size;
+        height: @avatar-size;
+        border-radius: @avatar-size;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .info {
+      float: left;
+      .username {
+        padding: 2px;
+        color: @text-color-light;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+      .email {
+        padding: 2px;
+        color: @text-color-light;
+        font-style: italic;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .navs {
+    height: 100%;
+    background-color: @primary-color;
+    ul {
+      a {
+        li {
+          padding: 10px 20px;
+          height: 24px;
+          line-height: 24px;
+          font-size: 16px;
+          color: @text-color-light;
+          border-left: 4px solid transparent;
+        }
+        &.active {
+          li {
+            background-color: darken(@primary-color, 4);
+            //background-color: darken(white, 10);
+            border-left: 4px solid @secondary-color;
+            color: @secondary-color;
+          }
+        }
+        &:hover {
+          li {
+            background-color: darken(@primary-color, 2);
+            border-left: 4px solid @secondary-color;
+            color: @secondary-color;
+          }
+        }
+      }
+    }
+  }
+}

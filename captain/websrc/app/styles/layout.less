@@ -1,5 +1,5 @@
 @import "variables";
-@import "mixins-grid";
+@import "mixins";
 @import "grid";
 
 html, body {
@@ -38,51 +38,75 @@ input {
 }
 
 input[type="text"],
+input[type="number"],
 input[type="password"] {
-  padding: 6px;
-  height: 32px;
+  font-size: 14px;
+  padding: 5px;
   border: @border-style;
   border-radius: 0;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 
   &:focus {
-    border: 1px solid @primary-color;
+    border: 1px solid @secondary-color;
     outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px @primary-color;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 4px @secondary-color;
   }
 }
 
 textarea {
-  border: 1px solid fade(black, 12);
+  padding: 5px;
+  border: @border-style;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   &:focus {
-    border: 1px solid @primary-color;
+    border: 1px solid @secondary-color;
     outline: 0;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 4px @primary-color;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 4px @secondary-color;
   }
 }
 
+select {
+  padding: 2px;
+  border: @border-style;
+  background-color: #fff;
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0 1px 6px @box-shadow-color;
+  }
+  &:focus {
+    border: 1px solid @secondary-color;
+    outline: 0;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 4px @secondary-color;
+  }
+}
 // button
 button {
   outline: none;
 }
 
 .btn {
-  &:focus, &:active:focus, &.active:focus {
+  height: 28px;
+  line-height: 24px;
+  padding: 2px 10px;
+  border: none;
+  border-radius: 4px;
+  &:focus, &:active:focus, &.active:focus,
+  &:hover, &:active, &:focus {
     outline: none;
+    cursor: pointer;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, .26);
   }
   &.btn-default {
-    background-color: #fff;
-    border: 1px solid fade(black, 32);
-    border-radius: 4px;
-    padding: 2px 10px;
-    color: fade(black, 70);
+    color: @text-color-light;
+    background-color: @secondary-color;
     &:hover, &:active, &:focus {
-      cursor: pointer;
-      background-color: fade(black, 70);
-      color: white;
+    }
+  }
+  &.btn-error {
+    color: @text-color-light;
+    background-color: #b33630;
+    &:hover, &:active, &:focus {
     }
   }
 }
@@ -92,4 +116,8 @@ ul {
   list-style: none;
 }
 
-
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}

@@ -1,12 +1,16 @@
-/**
- * Created by huangbin on 6/25/16.
- */
 import React from 'react';
-import { Route } from 'react-router'
 
-import App from './containers/App'
-
-export default (
-  <Route path="/" component={App}>
-  </Route>
-)
+export default {
+  path: '/',
+  component: require('./modules/Root').default,
+  indexRoute: {
+    component: require('./modules/Dashboard').default
+  },
+  childRoutes: [
+    require('./modules/Account').routes,
+    require('./modules/Application').routes,
+    require('./modules/Device').routes,
+    require('./modules/Api').routes,
+    require('./modules/Debug').routes
+  ]
+};

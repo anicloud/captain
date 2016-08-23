@@ -5,7 +5,7 @@
   "main": "app/index.jsx",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --progress --colors",
-    "build": "npm run clean && cross-env NODE_ENV=production webpack --progress --colors --config webpack.prod.config.js",
+    "build": "npm run clean && cross-env NODE_ENV=production webpack -p --progress --colors --config webpack.prod.config.js",
     "lint": "eslint app",
     "clean": "rm -rf ./public/*",
     "test": "mocha --recursive --compilers js:babel-core/register --require ./test/setup.js",
@@ -41,10 +41,12 @@
   },
   "homepage": "https://github.com/anicloud/captain#readme",
   "dependencies": {
+    "chart.js": "^2.2.1",
     "classnames": "^2.2.5",
     "es6-promise": "^3.2.1",
     "lodash": "^4.13.1",
     "react": "^15.1.0",
+    "react-chartjs-2": "^1.1.7",
     "react-dom": "^15.1.0",
     "react-icons": "^2.1.0",
     "react-redux": "^4.4.5",

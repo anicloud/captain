@@ -1,0 +1,114 @@
+@import (reference) "../../styles/app";
+
+.debug-panel-wrapper {
+  position: relative;
+  .debug-panel {
+    position: relative;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    .input {
+      .caption {
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        color: fade(@text-color, 70);
+      }
+      textarea {
+        //width: 280px;
+        width: 98%;
+        height: 240px;
+        resize: none;
+      }
+      .input-pre {
+        display: none;
+        &.open {
+          display: block;
+        }
+        .caption {
+          height: 40px;
+          line-height: 40px;
+          font-size: 16px;
+          color: fade(@text-color, 70);
+          text-align: left;
+        }
+        pre {
+          overflow: auto;
+          margin: 0;
+          height: 220px;
+          padding: 10px;
+          border: 1px solid fade(black, 20);
+          color: fade(black, 80);
+        }
+      }
+      .toggle {
+        width: 100%;
+        padding-top: 10px;
+        text-align: center;
+      }
+    }
+    .tool-bar {
+      text-align: center;
+      padding-top: 20px;
+      .tool {
+        padding: 5px 0;
+        .btn {
+          .text {
+
+          }
+          .icon {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+    .output {
+      .output-pre {
+        .caption {
+          height: 40px;
+          line-height: 40px;
+          font-size: 16px;
+          color: fade(@text-color, 70);
+          text-align: left;
+        }
+        pre {
+          overflow: auto;
+          height: 220px;
+          margin: 0;
+          padding: 10px;
+          border: 1px solid fade(black, 20);
+          color: fade(black, 80);
+        }
+      }
+    }
+  }
+
+  .debug-panel-mask {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.86;
+    background-color: #fff;
+    .hint {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: fade(black, 50);
+    }
+  }
+}
+
+@media (min-width: @screen-sm-min) {
+  .debug-panel-wrapper {
+    .debug-panel {
+      .tool-bar {
+        padding-top: 80px;
+      }
+    }
+  }
+}
+

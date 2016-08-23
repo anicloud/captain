@@ -25,8 +25,7 @@ module.exports = {
       path.resolve(__dirname, 'app/index.js')
     ],
     vendor: [
-      'react', 'react-dom', 'react-router',
-      'redux', 'react-redux', 'redux-thunk'
+      'react', 'react-dom'
     ]
   },
 

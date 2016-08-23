@@ -9,22 +9,11 @@ import classNames from 'classnames'
 import {noop} from '../utils'
 
 class MenuItem extends Component {
-  static propTypes = {
-    selected: PropTypes.bool,
-    active: PropTypes.bool,
-    onClick: PropTypes.func,
-    onSelect: PropTypes.func
-  };
-  static defaultProps = {
-    selected: false,
-    active: false,
-    onClick: noop,
-    onSelect: noop
-  };
 
   constructor(props) {
     super(props);
     this.onClick = this.onClick.bind(this);
+    this.onHover = this.onHover.bind(this);
   }
 
   onClick(e) {
@@ -37,38 +26,40 @@ class MenuItem extends Component {
     this.props.onClick(info);
     props.onSelect(info);
   }
-
+  
+  onHover() {
+    this.props.onHover();
+  }
+  
   render() {
     const props = this.props;
     const classes = {
       'menu-item': 1,
-      'active': props.active,
       'selected': props.selected
     };
 
-    const style = {
-      ...props.style
-    };
-
-    const attrs = {
-      ...props.attribute,
-      className: classNames(classes)
-    };
-
-    const mouseEvent = {
-      onClick: this.onClick
-    };
-
     return (
-      <li
-        style={style}
-        {...attrs}
-        {...mouseEvent}
-      >
+      <li className={classNames(classes)} 
+          onClick={this.onClick} 
+          onMouseEnter={this.onHover}>
         {props.children}
       </li>
     )
   }
 }
 
-export default connect()(MenuItem)
+MenuItem.propTypes = {
+  selected: PropTypes.bool,
+  onClick: PropTypes.func,
+  onSelect: PropTypes.func,
+  onHover: PropTypes.func
+};
+
+MenuItem.defaultProps = {
+  selected: false,
+  onClick: noop,
+  onSelect: noop,
+  onHover: noop
+};
+
+export default MenuItem;

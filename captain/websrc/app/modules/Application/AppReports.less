@@ -1,0 +1,130 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.reports {
+  .tool-bar {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px 0;
+    .clearfix();
+    .search-tool {
+      float: left;
+      input {
+      }
+    }
+    .result {
+      @height: 48px;
+      float: left;
+      margin-left: 100px;
+      height: @height;
+      border: @border-style;
+      //box-shadow: 0 0 2px rgba(0,0,0,.46);
+      //border-radius: 4px;
+      overflow: hidden;
+      .logo {
+        float: left;
+        height: @height;
+        width: @height;
+        img {
+          padding: 4px;
+          height: @height - 8px;
+          width: @height - 8px;
+          background-color: darken(#fff, 5);
+          border: none;
+        }
+      }
+      .info {
+        float: left;
+        height: @height;
+        width: 2.5*@height;
+        line-height: @height;
+        font-size: 18px;
+        color: @label-color;
+        text-align: center;
+      }
+    }
+  }
+  .reports-content {
+    width: 80%;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+    .row {
+      &:first-child {
+        padding-top: 0;
+      }
+      padding: 10px 0;
+      //padding-top: 40px;
+    }
+    .caption {
+      font-size: 20px;
+      color: @label-color;
+      font-weight: bold;
+    }
+    .capsule {
+      padding: 0;
+      height: 70px;
+      background-color: #fff;
+      border: @border-style;
+      //box-shadow: 0 0 2px rgba(0,0,0,.46);
+      border-radius: 2px;
+      color: @label-color;
+      overflow: hidden;
+      .number {
+        float: left;
+        width: 45%;
+        height: 70px;
+        line-height: 70px;
+        font-size: 24px;
+        text-align: center;
+      }
+      .text {
+        float: left;
+        .title {
+          padding-top: 10px;
+          font-size: 20px;
+          color: @secondary-color;
+        }
+        .subtitle {
+          font-size: 12px;
+          color: darken(#fff, 40);
+        }
+      }
+    }
+    .panel {
+      padding: 0;
+      border: @border-style;
+      border-radius: 2px;
+      .panel-header {
+        padding: 0 10px;
+        height: 40px;
+        line-height: 40px;
+        border-bottom: @border-style;
+        color: darken(#fff, 60);
+        background-color: #fff;
+        overflow: hidden;
+        .title {
+          float: left;
+        }
+        .selector {
+          float: right;
+          select {
+            border-radius: 2px;
+            color: lighten(#000, 40);
+            background-color: lighten(#000, 99);
+          }
+        }
+      }
+      .panel-content {
+        position: relative;
+        height: 320px;
+        .chart-graph {
+          padding: 20px;
+          canvas {
+            width: 100% !important;
+            height: 280px !important;
+          }
+        }
+      }
+    }
+  }
+}

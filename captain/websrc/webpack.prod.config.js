@@ -69,16 +69,12 @@ module.exports = {
       title: 'Captain',
       template: './app/index.html'
     }),
-    new webpack.optimize.LimitChunkCountPlugin({
-      maxChunks: 15
-    }),
     new webpack.optimize.MinChunkSizePlugin({
-      minChunkSize: 10000,
       compress: {
         warnings: false
       }
     }),
-    new webpack.optimize.CommonsChunkPlugin('commons.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin({

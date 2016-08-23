@@ -1,0 +1,22 @@
+@import "../../styles/variables";
+
+@debug-sidebar-width: 240px;
+
+.debug {
+  position: relative;
+  height: 100%;
+  .debug-sidebar {
+    position: fixed;
+    left: 260px;
+    top: 0;
+    bottom: 0;
+    width: @debug-sidebar-width;
+    height: 100%;
+    z-index: 100;
+  }
+  .debug-content {
+    position: relative;
+    margin-left: @debug-sidebar-width;
+    overflow: auto;
+  }
+}

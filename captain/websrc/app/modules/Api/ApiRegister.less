@@ -1,0 +1,120 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.api-register {
+  position: relative;
+  padding: 20px 0;
+  .register-panel {
+    min-width: 320px;
+    max-width: 1000px;
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .27);
+    .panel-header {
+      //border-bottom: 1px solid darken(#fff, 5);
+      .title {
+        height: 60px;
+        line-height: 60px;
+        color: @secondary-color;
+        font-size: 20px;
+        text-align: center;
+      }
+      .navs {
+        .navs();
+        padding-top: 30px;
+      }
+    }
+    .panel-content {
+      min-height: 600px;
+      width: 80%;
+      margin: 0 auto;
+      .form-group {
+        .form-item {
+          padding: 36px 0;
+          border-bottom: 1px solid lighten(#000, 95);
+          &:last-child {
+            border-bottom: none;
+          }
+          .item-key {
+            .name {
+              color: lighten(#000, 30);
+              font-size: 18px;
+            }
+            .description {
+              padding-top: 5px;
+              color: lighten(#000, 50);
+              font-size: 15px;
+            }
+          }
+          .item-value {
+            input[type="text"] {
+              width: 100%;
+              min-width: 200px;
+              max-width: 300px;
+              height: 18px;
+              border-radius: 4px;
+              color: lighten(#000, 30);
+            }
+            input[type="number"] {
+              width: 40px;
+              height: 18px;
+              border-radius: 4px;
+              color: lighten(#000, 30);
+            }
+            textarea {
+              width: 300px;
+              height: 120px;
+              resize: none;
+              overflow: auto;
+              border-radius: 4px;
+              color: lighten(#000, 30);
+            }
+            select {
+              height: 30px;
+              min-width: 80px;
+              border-radius: 4px;
+              color: lighten(#000, 30);
+            }
+          }
+          .args {
+            .arg {
+              display: table;
+              width: 100%;
+              padding: 5px 0;
+              .name {
+                display: table-cell;
+                width: 1px;
+                input {
+                  width: 120px;
+                  min-width: 50px;
+                }
+              }
+              .type {
+                display: table-cell;
+                width: 1px;
+                padding-left: 20px;
+                select {
+                }
+              }
+              .action-btn {
+                display: table-cell;
+                padding-left: 20px;
+                text-align: right;
+              }
+            }
+          }
+        }
+      }
+      .action {
+        padding: 40px 0;
+        text-align: center;
+        .btn {
+          height: 32px;
+          width: 100px;
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}

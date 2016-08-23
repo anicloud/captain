@@ -1,0 +1,28 @@
+@import '../../styles/variables';
+
+.dashboard {
+  position: relative;
+  height: 100%;
+  .entry {
+    position: absolute;
+    width: 100%;
+    top: 42%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    .logo {
+      font-size: 32px;
+      text-align: center;
+      color: @label-color;
+    }
+    .btn-entry {
+      height: 32px;
+      margin-top: 20px;
+      color: @text-color-light;
+      background-color: @primary-color;
+    }
+    button + button {
+      margin-left: 20px;
+    }
+  }
+}

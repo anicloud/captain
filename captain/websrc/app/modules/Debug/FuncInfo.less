@@ -1,0 +1,112 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.func-info {
+  position: relative;
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  //background-color: darken(#fff, 5);
+  .func-list {
+    position: relative;
+    height: 300px;
+    //border: @border-style;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+    background-color: #fff;
+    .title {
+      font-size: 16px;
+      height: 36px;
+      line-height: 36px;
+      padding-left: 10px;
+      text-align: left;
+      color: darken(#fff, 60);
+      background-color: #fff;
+      border-bottom: @border-style;
+    }
+    .content {
+      overflow: auto;
+      height: 100px;
+      .menu {
+        .menu-item {
+          text-align: left;
+          padding-left: 20px;
+          &:hover, &.selected {
+            background-color: #fff;
+          }
+        }
+      }
+      .hint {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        font-size: 14px;
+        color: fade(black, 50);
+        text-align: center;
+      }
+    }
+  }
+  .func-details {
+    position: relative;
+    height: 300px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+    background-color: #fff;
+    .title {
+      font-size: 16px;
+      height: 36px;
+      line-height: 36px;
+      text-align: left;
+      padding-left: 10px;
+      color: darken(#fff, 60);
+      border-bottom: @border-style;
+    }
+    .content {
+      height: 300px - 38px;
+      overflow: auto;
+      ul {
+        li {
+          padding: 2px 10px;
+          &:hover, &.selected {
+            background-color: #fff;
+          }
+          &:first-child {
+            padding-top: 10px;
+          }
+          &:last-child {
+            padding-bottom: 10px;
+          }
+          .clearfix();
+          .key {
+            float: left;
+            height: 24px;
+            line-height: 24px;
+            min-width: 80px;
+            max-width: 120px;
+            width: 20%;
+            text-align: right;
+            font-size: 16px;
+            color: darken(#fff, 60);
+            white-space: nowrap;
+          }
+          .value {
+            float: left;
+            height: 24px;
+            line-height: 24px;
+            padding-left: 20px;
+            font-size: 15px;
+            text-align: left;
+            color: darken(#fff, 60);
+          }
+        }
+      }
+      .hint {
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        text-align: center;
+        color: darken(#fff, 60);
+      }
+    }
+  }
+}

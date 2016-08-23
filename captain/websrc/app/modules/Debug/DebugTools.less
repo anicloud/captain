@@ -1,0 +1,72 @@
+@import "../../styles/variables";
+
+.debug-tools {
+  position: relative;
+  background-color: #fff;
+  min-height: 400px;
+  .tabs {
+    .tab-navs {
+      padding: 0 10px;
+      height: 34px;
+      background-color: darken(#fff, 3);
+      border-top: 1px solid darken(#fff, 15);
+      border-bottom: 1px solid darken(#fff, 10);
+      .tab-nav {
+        @tab-nav-height: 34px;
+        float: left;
+        line-height: @tab-nav-height;
+        transition: background-color, box-shadow 0.05s ease;
+        &.selected {
+          background-color: #fff;
+          box-shadow: 0 2px 0 fade(@secondary-color, 50);
+          .tab-nav-title {
+            color: @secondary-color;
+          }
+          .tab-nav-close {
+            opacity: .8;
+          }
+        }
+        &:hover {
+          cursor: pointer;
+          background-color: darken(#fff, 10);
+          .tab-nav-close {
+            opacity: .8;
+          }
+        }
+        .tab-nav-title {
+          float: left;
+          padding-left: 10px;
+          max-width: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: @label-color;
+        }
+        .tab-nav-close {
+          float: right;
+          width: 24px;
+          text-align: center;
+          font-size: 14px;
+          color: darken(#fff, 40);
+          opacity: 0;
+          transition: opacity 0.05s ease;
+          &:hover {
+            color: darken(#fff, 60);
+          }
+        }
+      }
+    }
+    .tab-contents {
+      .tab-content {
+        display: none;
+        position: relative;
+        overflow: hidden;
+        padding: 0;
+        &.selected {
+          display: block;
+        }
+      }
+    }
+
+  }
+
+}

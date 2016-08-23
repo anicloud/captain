@@ -1,0 +1,32 @@
+.navs() {
+  padding-top: 24px;
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+  border-bottom: 1px solid darken(#fff, 20);
+  ul {
+    li {
+      display: inline-block;
+      min-width: 60px;
+      padding: 10px 10px;
+      margin: 0 8px;
+      font-size: 18px;
+      color: @label-color;
+      text-align: center;
+      border-bottom: 1px solid transparent;
+      &.active, &:hover {
+        cursor: pointer;
+        color: @secondary-color;
+        border-bottom: 1px solid @secondary-color;
+      }
+    }
+    a {
+      &.active {
+        li {
+          color: @secondary-color;
+          border-bottom: 1px solid @secondary-color;
+        }
+      }
+    }
+  }
+}

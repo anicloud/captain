@@ -1,0 +1,49 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+
+.api {
+  height: 100%;
+  overflow-y: auto;
+  background-color: darken(#fff, 5);
+  @header-height: 70px;
+  .header {
+    display: table;
+    width: 100%;
+    position: relative;
+    background-color: #fff;
+    box-shadow: 0 0 1px rgba(0, 0, 0, .26);
+    .logo {
+      display: table-cell;
+      width: 1px;
+      height: @header-height;
+      vertical-align: middle;
+      padding: 0 40px;
+      font-size: 24px;
+      white-space: nowrap;
+      color: darken(#fff, 60);
+      transition: color ease .2s;
+      &:hover {
+        cursor: pointer;
+        color: @secondary-color;
+      }
+    }
+    .search-tool {
+      display: table-cell;
+      width: 1px;
+      height: @header-height;
+      vertical-align: middle;
+    }
+    .action {
+      display: table-cell;
+      height: @header-height;
+      text-align: right;
+      vertical-align: middle;
+      padding: 0 40px;
+      .btn {
+        height: 30px;
+        width: 80px;
+        font-size: 15px;
+      }
+    }
+  }
+}

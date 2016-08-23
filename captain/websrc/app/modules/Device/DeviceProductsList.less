@@ -1,0 +1,80 @@
+@import "../../styles/mixins";
+@import "../../styles/variables";
+
+.device-products-list {
+  .tool-bar {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px 0;
+    .clearfix();
+
+    .filter-tool {
+      float: left;
+    }
+    .add-tool {
+      float: right;
+      .btn.btn-default {
+        font-size: 15px;
+        height: 30px;
+        width: 100px;
+      }
+    }
+  }
+  .device-list {
+    width: 80%;
+    margin: 0 auto;
+    table {
+      //border-top: @table-border-style;
+      border-bottom: @table-border-style;
+      thead {
+        color: darken(#fff, 50);
+        border-bottom: @table-border-style;
+        tr {
+          height: 40px;
+          line-height: 40px;
+          th {
+            &:first-child {
+              padding-left: 10px;
+            }
+            font-weight: inherit;
+            text-align: left;
+          }
+        }
+      }
+      tbody {
+        tr {
+          border-bottom: @table-border-style;
+          &:hover {
+            background-color: darken(#fff, 5);
+            cursor: pointer;
+          }
+          td {
+            color: darken(#fff, 70);
+            height: 48px;
+            line-height: 48px;
+            //text-align: center;
+            font-size: 16px;
+            .name {
+              overflow: hidden;
+              padding-left: 10px;
+              height: 48px;
+              line-height: 48px;
+              span {
+                float: left;
+                img {
+                  padding: 4px 0;
+                  height: 40px;
+                  width: 40px;
+                }
+              }
+              span + span {
+                margin-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

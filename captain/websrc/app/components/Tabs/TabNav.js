@@ -1,9 +1,8 @@
 /**
  * Created by huangbin on 7/4/16.
  */
-import React, {Component, PropTypes} from 'react'
-import {connect} from 'react-redux'
-import classNames from 'classnames'
+import React, {Component, PropTypes} from 'react';
+import classNames from 'classnames';
 
 import {noop} from '../utils'
 
@@ -69,4 +68,4 @@ TabNav.defaultProps = {
   onCloseTab: noop
 };
 
-export default connect()(TabNav)
+export default TabNav;

@@ -14,6 +14,9 @@ public class FunctionMetaData {
     public FunctionConnType connType;
     public FunctionAccessType accessType;
 
+    public FunctionMetaData() {
+    }
+
     public FunctionMetaData(Integer functionId, String name, FunctionGroupData group,
                             List<ArgumentMetaData> input, List<ArgumentMetaData> output,
                             FunctionConnType connType, FunctionAccessType accessType) {

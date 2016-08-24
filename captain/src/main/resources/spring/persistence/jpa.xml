@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+  <context:property-placeholder location="classpath:/spring/persistence/jpa.properties"
+                                ignore-unresolvable="true" order="401"/>
+  <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+  <!--<property name="location" value="/properties/jpa.properties"/>-->
+  <!--</bean>-->
+
+  <bean id="jpaDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+    <property name="driverClass" value="${jdbc.driverClass}"/>
+    <property name="jdbcUrl" value="${jdbc.url}"/>
+    <property name="user" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+    <property name="acquireIncrement" value="${pool.acquireIncrement}"/>
+    <property name="initialPoolSize" value="${pool.initialPoolSize}"/>
+    <property name="minPoolSize" value="${pool.minPoolSize}"/>
+    <property name="maxPoolSize" value="${pool.maxPoolSize}"/>
+    <property name="maxStatements" value="${pool.maxStatements}"/>
+    <property name="maxIdleTime" value="${pool.maxIdleTime}"/>
+    <property name="idleConnectionTestPeriod" value="${pool.idleConnectionTestPeriod}"/>
+    <property name="acquireRetryAttempts" value="${pool.acquireRetryAttempts}"/>
+    <property name="breakAfterAcquireFailure" value="${pool.breakAfterAcquireFailure}"/>
+    <property name="testConnectionOnCheckout" value="${pool.testConnectionOnCheckout}"/>
+  </bean>
+
+  <!-- Entity Manager Factory Configurations -->
+  <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+    <property name="database" value="MYSQL"/>
+    <property name="showSql" value="true"/>
+    <property name="generateDdl" value="true"/>
+    <property name="databasePlatform" value="org.hibernate.dialect.MySQL5Dialect"/>
+  </bean>
+  <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="dataSource" ref="jpaDataSource"/>
+    <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+    <property name="packagesToScan">
+      <list>
+        <value>com.ani.captain.infrastructure.persistence.dao</value>
+      </list>
+    </property>
+    <property name="jpaProperties">
+      <props>
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.max_fetch_depth">0</prop>
+        <prop key="hibernate.format_sql">false</prop>
+        <prop key="hibernate.use_sql_comments">false</prop>
+        <prop key="hibernate.hbm2ddl.auto">update</prop>
+        <prop key="hibernate.cache.use_query_cache">true</prop>
+        <prop key="hibernate.cache.use_second_level_cache">true</prop>
+        <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+        </prop>
+        <prop key="hibernate.temp.use_jdbc_metadata_defaults">false</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="jpaDataSource"/>
+  </bean>
+  <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+  <!-- Transaction -->
+  <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+  <!--Translation Post Processor-->
+  <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+  <!-- Final JPA Configuration -->
+  <jpa:repositories base-package="com.ani.captain.infrastructure.persistence.repository"
+                    entity-manager-factory-ref="entityManagerFactory"
+                    transaction-manager-ref="transactionManager"></jpa:repositories>
+</beans>

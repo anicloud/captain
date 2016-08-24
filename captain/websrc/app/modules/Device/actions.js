@@ -1,6 +1,7 @@
 /**
  * Created by huangbin on 8/9/16.
  */
+import {host} from '../constants';
 import request from 'reqwest';
 
 export const LOAD_DEVICE = 'device/LOAD_DEVICE';
@@ -37,7 +38,7 @@ export function loadDevice() {
     if ((!products.loaded && !products.loading)) {
       dispatch(requestDevice());
       return request({
-        url: '/service/device/list',
+        url: `${host}/service/product/device/list`,
         method: 'get'
       }).then(
         (json) => requestDeviceSuccess(json),
@@ -72,8 +73,9 @@ export function loadDeviceDetails(deviceId) {
     const details = getState().device.details;
     if (!details.loading && !details.entities.hasOwnProperty(deviceId)) {
       dispatch(requestDeviceDetails());
+      const [masterId, slaveId] = deviceId.split('_', 2);
       return request({
-        url: '/service/device/details/' + deviceId,
+        url: `${host}/service/product/device/details/${masterId}/${slaveId}`,
         method: 'get'
       }).then(
         (json) => requestDeviceDetailsSuccess(json),
@@ -109,8 +111,9 @@ export function loadDeviceReports(deviceId) {
     const details = getState().device.details;
     if (!details.loading && !details.entities.hasOwnProperty(deviceId)) {
       dispatch(requestDeviceReports());
+      const [masterId, slaveId] = deviceId.split('_', 2);
       return request({
-        url: '/service/device/reports/' + deviceId,
+        url: `${host}/service/product/device/reports/${masterId}/${slaveId}`,
         method: 'get'
       }).then(
         (json) => requestDeviceReportsSuccess(json),

@@ -1,7 +1,7 @@
 /**
  * Created by huangbin on 8/9/16.
  */
-
+import {host} from '../constants';
 import request from 'reqwest';
 
 export const REQUEST_ACCOUNT_INFO = 'account/REQUEST_ACCOUNT_INFO';
@@ -39,8 +39,6 @@ export const DELETE_ACCOUNT_APP_FAIL = 'account/DELETE_ACCOUNT_APP_FAIL';
 export const DELETE_ACCOUNT_DEVICE = 'account/DELETE_ACCOUNT_DEVICE';
 export const DELETE_ACCOUNT_DEVICE_SUCCESS = 'account/DELETE_ACCOUNT_DEVICE_SUCCESS';
 export const DELETE_ACCOUNT_DEVICE_FAIL = 'account/DELETE_ACCOUNT_DEVICE_FAIL';
-
-const host = '';
 
 export function loadAccountInfo() {
   return (dispatch, getState) => {

@@ -1,6 +1,7 @@
 /**
  * Created by huangbin on 8/15/16.
  */
+import {host} from '../constants';
 import request from 'reqwest';
 
 export const REQUEST_API_GROUPS = 'api/REQUEST_API_GROUPS';
@@ -11,14 +12,13 @@ export const REQUEST_API_DETAILS = 'api/REQUEST_API_DETAILS';
 export const REQUEST_API_DETAILS_SUCCESS = 'api/REQUEST_API_DETAILS_SUCCESS';
 export const REQUEST_API_DETAILS_FAIL = 'api/REQUEST_API_DETAILS_FAIL';
 
-
 export function loadGroups() {
   return (dispatch, getState) => {
     const groups = getState().api.groups;
     if (!groups.loading && !groups.loaded) {
       dispatch(requestGroups());
       return request({
-        url: '/service/api/groups',
+        url: `${host}/service/api/groups`,
         type: 'json',
         method: 'get'
       }).then(
@@ -56,7 +56,7 @@ export function loadApiDetails(id) {
     if (!details.loading && !details.entities.hasOwnProperty(id)) {
       dispatch(requestApiDetails());
       return request({
-        url: '/service/api/details/apiId=' + id,
+        url: `${host}/service/api/details/${id}`,
         type: 'json',
         method: 'get'
       }).then(

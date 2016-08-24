@@ -1,6 +1,7 @@
 /**
  * Created by huangbin on 8/9/16.
  */
+import {host} from '../constants';
 import request from 'reqwest';
 
 export const LOAD_APP = 'application/LOAD_APP';
@@ -37,7 +38,7 @@ export function loadApp() {
     if ((!products.loaded && !products.loading)) {
       dispatch(requestApp());
       return request({
-        url: '/service/app/list',
+        url: `${host}/service/product/app/list`,
         method: 'get'
       }).then(
         (json) => requestAppSuccess(json),
@@ -73,7 +74,7 @@ export function loadAppDetails(appId) {
     if (!details.loading && !details.entities.hasOwnProperty(appId)) {
       dispatch(requestAppDetails());
       return request({
-        url: '/service/app/details/' + appId,
+        url: `${host}/service/product/app/details/${appId}`,
         method: 'get'
       }).then(
         (json) => requestAppDetailsSuccess(json),
@@ -103,14 +104,13 @@ function requestAppDetailsFail(msg) {
   }
 }
 
-
 export function loadAppReports(appId) {
   return (dispatch, getState) => {
     const details = getState().app.details;
     if (!details.loading && !details.entities.hasOwnProperty(appId)) {
       dispatch(requestAppReports());
       return request({
-        url: '/service/app/reports/' + appId,
+        url: `${host}/service/product/app/reports/${appId}`,
         method: 'get'
       }).then(
         (json) => requestAppReportsSuccess(json),

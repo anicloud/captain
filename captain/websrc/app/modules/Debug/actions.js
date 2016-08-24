@@ -1,6 +1,7 @@
 /**
  * Created by huangbin on 8/15/16.
  */
+import {host} from '../constants';
 import request from 'reqwest';
 
 export const REQUEST_DEBUG_DEVICES = 'debug/REQUEST_DEBUG_DEVICES';
@@ -15,15 +16,13 @@ export const REQUEST_INVOCATION = 'debug/REQUEST_INVOCATION';
 export const REQUEST_INVOCATION_SUCCESS = 'debug/REQUEST_INVOCATION_SUCCESS';
 export const REQUEST_INVOCATION_FAIL = 'debug/REQUEST_INVOCATION_FAIL';
 
-const host = '';
-
 export function loadDebugDevices() {
   return (dispatch, getState) => {
     const devices = getState().debug.devices;
     if (!devices.loading) {
       dispatch(requestDebugDevices());
       return request({
-        url: '/service/debug/devices',
+        url: `${host}/service/debug/device/list`,
         method: 'get'
       }).then(
         (json) => dispatch(requestDebugDevicesSuccess(json)),
@@ -58,8 +57,9 @@ export function loadDebugFunctions(deviceId) {
     const functions = getState().debug.functions;
     if (!functions.loading && !functions.entities[deviceId]) {
       dispatch(requestDebugFunctions());
+      const [masterId, slaveId] = deviceId.split('_', 2);
       return request({
-        url: '/service/debug/functions/deviceId=' + deviceId,
+        url: `${host}/service/debug/functions/${masterId}/${slaveId}`,
         method: 'get'
       }).then(
         (json) => dispatch(requestDebugFunctionsSuccess(json)),
@@ -95,7 +95,7 @@ export function invokeFunction(key, invocation) {
     if (!invocations.loadingKeys.includes(key)) {
       dispatch(requestInvocation(key, invocation));
       return request({
-        url: `${host}/service/function/invoke`,
+        url: `${host}/service/debug/function/invoke`,
         method: 'POST',
         contentType: 'application/json',
         type: 'json',

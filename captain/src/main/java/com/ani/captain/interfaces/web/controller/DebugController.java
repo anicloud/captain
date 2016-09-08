@@ -4,17 +4,17 @@ import com.ani.bus.device.application.service.DeviceBusService;
 import com.ani.bus.device.commons.dto.device.DeviceMasterDto;
 import com.ani.bus.device.commons.dto.device.DeviceSlaveDto;
 import com.ani.bus.device.commons.dto.device.FunctionDto;
-import com.ani.captain.interfaces.web.controller.dto.device.DeviceDataUtils;
-import com.ani.captain.interfaces.web.controller.dto.device.DeviceMasterData;
-import com.ani.captain.interfaces.web.controller.dto.device.DeviceState;
+import com.ani.captain.interfaces.web.controller.dto.debug.DeviceDataUtils;
+import com.ani.captain.interfaces.web.controller.dto.debug.DeviceMasterData;
+import com.ani.captain.interfaces.web.controller.dto.debug.DeviceState;
 import com.ani.captain.interfaces.web.controller.dto.function.FunctionDataUtils;
 import com.ani.captain.interfaces.web.controller.dto.function.FunctionMetaData;
 import com.ani.captain.interfaces.web.controller.dto.function.InvocationData;
 import com.ani.captain.interfaces.web.service.AccountDetails;
-import com.ani.octopus.account.interfaces.AccountServiceFacade;
+import com.ani.earth.commons.dto.AccountGroupDto;
+import com.ani.earth.interfaces.AccountServiceFacade;
 import com.ani.octopus.antenna.core.AntennaTemplate;
 import com.ani.octopus.antenna.core.dto.stub.StubInvocationDto;
-import com.ani.octopus.commons.accout.dto.AccountGroupDto;
 import com.ani.octopus.commons.object.dto.object.ObjectMainInfoDto;
 import com.ani.octopus.commons.object.dto.object.ObjectMainQueryDto;
 import com.ani.octopus.commons.object.dto.object.ObjectQueryDto;
@@ -35,7 +35,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/service/debug")
-@CrossOrigin(origins = "http://localhost:8080")
+//@CrossOrigin(origins = "http://localhost:8080")
 public class DebugController {
     @Resource
     private AniStubMetaService aniStubMetaService;
@@ -51,9 +51,9 @@ public class DebugController {
 
     @RequestMapping(value = "/device/list", method = RequestMethod.GET)
     public List<DeviceMasterData> getDevices() {
-//        AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        Long accountId = accountDetails.accountDto.accountId;
-        Long accountId = 764111382711898568L;
+        AccountDetails accountDetails = (AccountDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long accountId = accountDetails.accountDto.accountId;
+//        long accountId = 764111382711898568L;
         List<ObjectMainInfoDto> objectDtos = new ArrayList<>();
         try {
             // get owned devices
@@ -105,7 +105,7 @@ public class DebugController {
     }
 
     @RequestMapping(value = "/device/{deviceId}", method = RequestMethod.GET)
-    public DeviceMasterData getDeviceById(@PathVariable Long deviceId) {
+    public DeviceMasterData getDeviceById(@PathVariable long deviceId) {
         DeviceMasterDto deviceMasterDto = deviceBusService.findDeviceMaster(deviceId);
         if (deviceMasterDto == null) {
             return null;
@@ -138,9 +138,9 @@ public class DebugController {
     }
 
     @RequestMapping(value = "/functions/{masterId}/{slaveId}", method = RequestMethod.GET)
-    public List<FunctionMetaData> getFunctions(@PathVariable Long masterId, @PathVariable Integer slaveId) {
+    public List<FunctionMetaData> getFunctions(@PathVariable long masterId, @PathVariable int slaveId) {
         List<FunctionMetaData> metaDatas = null;
-        if (slaveId == null || slaveId == -1) {
+        if (slaveId == -1) {
             DeviceMasterDto masterDto = deviceBusService.findDeviceMaster(masterId);
             if (masterDto.functions != null) {
                 metaDatas = new ArrayList<>(masterDto.functions.size());
@@ -162,14 +162,11 @@ public class DebugController {
     }
 
     @RequestMapping(value = "/function/{groupId}/{functionId}", method = RequestMethod.GET)
-    public FunctionMetaData getFunction(@PathVariable Long groupId, @PathVariable Integer functionId) {
+    public FunctionMetaData getFunction(@PathVariable long groupId, @PathVariable int functionId) {
         return doGetFunction(groupId, functionId);
     }
 
-    private FunctionMetaData doGetFunction(Long groupId, Integer functionId) {
-        if (groupId == null || functionId == null) {
-            return null;
-        }
+    private FunctionMetaData doGetFunction(long groupId, int functionId) {
         Stub stub = aniStubMetaService.getStub(new StubDto(groupId, functionId));
         return FunctionDataUtils.fromFunctionMetaDto(stub);
     }
@@ -184,7 +181,7 @@ public class DebugController {
         List<StubInvocationDto> invocationDtos = new ArrayList<>();
         invocationDtos.add(invocationDto);
         try {
-            Long deviceId = Long.parseLong(invocationData.deviceId);
+            long deviceId = Long.parseLong(invocationData.deviceId);
             ObjectQueryDto queryDto = invocationData.slaveId == -1 ? new ObjectMainQueryDto(deviceId) : new ObjectSlaveQueryDto(deviceId, invocationData.slaveId);
             invocationDtos = antennaTemplate.objectInvokeService.invokeObject(queryDto, invocationDtos);
             invocationDto = invocationDtos.get(0);

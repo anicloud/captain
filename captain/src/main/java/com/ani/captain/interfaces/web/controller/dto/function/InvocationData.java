@@ -1,6 +1,6 @@
 package com.ani.captain.interfaces.web.controller.dto.function;
 
-import com.ani.captain.interfaces.web.controller.dto.device.FunctionData;
+import com.ani.captain.interfaces.web.controller.dto.debug.FunctionData;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class InvocationData {
     public String deviceId;
-    public Integer slaveId;
+    public int slaveId;
     public FunctionData function;
     public List inputValues;
     public List outputValues;
@@ -19,7 +19,7 @@ public class InvocationData {
     public InvocationData() {
     }
 
-//    public InvocationData(String deviceId, Integer slaveId, FunctionData function, List inputValues, List outputValues, Boolean result, String message) {
+//    public InvocationData(String deviceId, intslaveId, FunctionData function, List inputValues, List outputValues, Boolean result, String message) {
 //        this.deviceId = deviceId;
 //        this.slaveId = slaveId;
 //        this.function = function;

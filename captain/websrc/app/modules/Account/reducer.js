@@ -6,32 +6,38 @@ import * as t from './actions';
 
 const initialState = {
   info: {
-    loaded: true,
+    loaded: false,
     loading: false,
     entity: {
+      accountId: '1',
       name: 'Huang Bin',
       email: 'huangbin@anicloud.com',
       avatarUrl: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png',
-      isAppDeveloper: false,
-      isDeviceDeveloper: false
+      phoneNumber: '15050505050',
+      appDeveloper: false,
+      deviceDeveloper: false
     }
   },
   app: {
-    loaded: true,
+    loaded: false,
     loading: false,
     entity: {
-      logoUrl: '',
+      vendor: 'vendor',
+      intro: 'intro',
+      logo: '',
       home: 'http://example.com',
-      token: ''
+      creditCard: '6214****2323'
     }
   },
   device: {
     loaded: true,
     loading: false,
     entity: {
-      logoUrl: '',
+      vendor: 'vendor',
+      intro: 'intro',
+      logo: '',
       home: 'http://example.com',
-      token: ''
+      creditCard: '6214****2323'
     }
   }
 };
@@ -43,7 +49,7 @@ function info(state, action) {
       return Object.assign({}, state, {
         loading: true,
         loaded: false,
-        entities: {}
+        entity: {}
       });
     }
     case t.REQUEST_ACCOUNT_INFO_SUCCESS:
@@ -51,7 +57,7 @@ function info(state, action) {
       return Object.assign({}, state, {
         loading: false,
         loaded: true,
-        entities: action.data
+        entity: action.data
       });
     }
     case t.REQUEST_ACCOUNT_INFO_FAIL:
@@ -59,8 +65,20 @@ function info(state, action) {
       return Object.assign({}, state, {
         loading: false,
         loaded: false,
-        entities: {}
+        entity: {}
       });
+    }
+    case t.DELETE_ACCOUNT_APP_SUCCESS:
+    {
+      let nextState = Object.assign({}, state);
+      nextState.entity.appDeveloper = false;
+      return nextState;
+    }
+    case t.DELETE_ACCOUNT_DEVICE_SUCCESS:
+    {
+      let nextState = Object.assign({}, state);
+      nextState.entity.deviceDeveloper = false;
+      return nextState;
     }
     default:
       return state;
@@ -74,7 +92,7 @@ function app(state, action) {
       return Object.assign({}, state, {
         loading: true,
         loaded: false,
-        entities: {}
+        entity: {}
       });
     }
     case t.REQUEST_ACCOUNT_APP_SUCCESS:
@@ -82,7 +100,7 @@ function app(state, action) {
       return Object.assign({}, state, {
         loading: false,
         loaded: true,
-        entities: action.data
+        entity: action.data
       });
     }
     case t.REQUEST_ACCOUNT_APP_FAIL:
@@ -90,11 +108,58 @@ function app(state, action) {
       return Object.assign({}, state, {
         loading: false,
         loaded: false,
-        entities: {}
+        entity: {}
       });
     }
+    case t.DELETE_ACCOUNT_APP:
+    {
+      return Object.assign({}, state, {
+        loading: true,
+        loaded: false
+      });
+    }
+    case t.DELETE_ACCOUNT_APP_SUCCESS:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: false,
+        entity: {}
+      });
+    }
+    case t.DELETE_ACCOUNT_APP_FAIL:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true
+      });
+    }
+    case t.SAVE_ACCOUNT_APP:
+    {
+      return Object.assign({}, state, {
+        loading: true,
+        loaded: false
+      });
+    }
+    case t.SAVE_ACCOUNT_APP_SUCCESS:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true,
+        entity: action.data
+      });
+    }
+    case t.SAVE_ACCOUNT_APP_FAIL:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true
+      });
+    }
+    default:
+      return state;
   }
 }
+
 
 function device(state, action) {
   switch (action.type) {
@@ -103,7 +168,7 @@ function device(state, action) {
       return Object.assign({}, state, {
         loading: true,
         loaded: false,
-        entities: {}
+        entity: {}
       });
     }
     case t.REQUEST_ACCOUNT_DEVICE_SUCCESS:
@@ -111,7 +176,7 @@ function device(state, action) {
       return Object.assign({}, state, {
         loading: false,
         loaded: true,
-        entities: action.data
+        entity: action.data
       });
     }
     case t.REQUEST_ACCOUNT_DEVICE_FAIL:
@@ -119,13 +184,75 @@ function device(state, action) {
       return Object.assign({}, state, {
         loading: false,
         loaded: false,
-        entities: {}
+        entity: {}
       });
     }
+    case t.DELETE_ACCOUNT_DEVICE:
+    {
+      return Object.assign({}, state, {
+        loading: true,
+        loaded: false
+      });
+    }
+    case t.DELETE_ACCOUNT_DEVICE_SUCCESS:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: false,
+        entity: {}
+      });
+    }
+    case t.DELETE_ACCOUNT_DEVICE_FAIL:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true
+      });
+    }
+    case t.SAVE_ACCOUNT_DEVICE:
+    {
+      return Object.assign({}, state, {
+        loading: true,
+        loaded: false
+      });
+    }
+    case t.SAVE_ACCOUNT_DEVICE_SUCCESS:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true,
+        entity: action.data
+      });
+    }
+    case t.SAVE_ACCOUNT_DEVICE_FAIL:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true
+      });
+    }
+    default:
+      return state;
   }
 }
 
-export default function (state = initialState, action = {}) {
+export default function (state = {
+  info: {
+    loaded: false,
+    loading: false,
+    entity: {}
+  },
+  app: {
+    loaded: false,
+    loading: false,
+    entity: {}
+  },
+  device: {
+    loaded: false,
+    loading: false,
+    entity: {}
+  }
+}, action = {}) {
   return Object.assign({}, state, {
     info: info(state.info, action),
     app: app(state.app, action),

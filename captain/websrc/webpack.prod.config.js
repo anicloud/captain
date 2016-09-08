@@ -2,7 +2,6 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 var HtmlWebpackPlugin = require("html-webpack-plugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
@@ -17,32 +16,29 @@ module.exports = {
     ],
     vendor: [
       'react', 'react-dom', 'react-router',
-      'redux', 'react-redux', 'react-router-redux', 'redux-thunk',
-      'lodash', 'reqwest'
+      'redux', 'react-redux', 'react-router-redux'
     ]
   },
   output: {
-    path: path.resolve(__dirname, './public'),
+    path: path.resolve(__dirname, 'public'),
     filename: "[name].[hash:8].js",
-    publicPath: '/public'
+    publicPath: '/public/'
   },
   resolve: {
     extension: ['', '.jsx', '.js', '.json'],
+    root: [
+      path.resolve(__dirname, 'app')
+    ],
     alias: {
     }
   },
-  externals: {
-  },
   module: {
+    noParse: [],
     loaders: [
       {
         test: /\.js[x]?$/,
         loaders: ['babel'],
         exclude: path.resolve(__dirname, 'node_modules')
-      },
-      {
-        test: /\.css/,
-        loader: ExtractTextPlugin.extract("style-loader", "css-loader")
       },
       {
         test: /\.less/,
@@ -60,27 +56,21 @@ module.exports = {
   },
   plugins: [
     definePlugin,
-    new uglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }),
     new HtmlWebpackPlugin({
       title: 'Captain',
       template: './app/index.html'
     }),
-    new webpack.optimize.MinChunkSizePlugin({
+    new webpack.optimize.UglifyJsPlugin({
+      output: {
+        comments: false
+      },
       compress: {
         warnings: false
       }
     }),
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
+    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.[hash:8].js'),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin({
-      minSizeReduce: 1.5,
-      moveToParents: true
-    }),
     new ExtractTextPlugin("app.[hash:8].css", {
       allChunks: true
     })

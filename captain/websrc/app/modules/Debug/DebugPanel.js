@@ -3,7 +3,9 @@
  */
 import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
-import {MdPlayArrow, MdStop, MdPause} from 'react-icons/lib/md';
+import MdPlayArrow from 'react-icons/lib/md/play-arrow';
+import MdStop from 'react-icons/lib/md/stop';
+import MdPause from 'react-icons/lib/md/pause';
 import './DebugPanel.less';
 
 class DebugPanel extends Component {

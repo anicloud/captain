@@ -1,157 +1,174 @@
 /**
  * Created by huangbin on 8/9/16.
  */
-import {host} from '../constants';
+import {host, requestOptions} from '../constants';
 import request from 'reqwest';
 
-export const LOAD_APP = 'application/LOAD_APP';
-export const LOAD_APP_SUCCESS = 'application/LOAD_APP_SUCCESS';
-export const LOAD_APP_FAIL = 'application/LOAD_APP_FAIL';
+export const FETCH_PRODUCTS = 'application/FETCH_PRODUCTS';
+export const FETCH_PRODUCTS_SUCCESS = 'application/FETCH_PRODUCTS_SUCCESS';
+export const FETCH_PRODUCTS_FAIL = 'application/FETCH_PRODUCTS_FAIL';
 
-export const LOAD_APP_DETAILS = 'application/LOAD_APP_DETAILS';
-export const LOAD_APP_DETAILS_SUCCESS = 'application/LOAD_APP_DETAILS_SUCCESS';
-export const LOAD_APP_DETAILS_FAIL = 'application/LOAD_APP_DETAILS_FAIL';
+export const FETCH_PRODUCT_REPORTS = 'application/FETCH_PRODUCT_REPORTS';
+export const FETCH_PRODUCT_REPORTS_SUCCESS = 'application/FETCH_PRODUCT_REPORTS_SUCCESS';
+export const FETCH_PRODUCT_REPORTS_FAIL = 'application/FETCH_PRODUCT_REPORTS_FAIL';
 
-export const LOAD_APP_REPORTS = 'application/LOAD_APP_REPORTS';
-export const LOAD_APP_REPORTS_SUCCESS = 'application/LOAD_APP_REPORTS_SUCCESS';
-export const LOAD_APP_REPORTS_FAIL = 'application/LOAD_APP_REPORTS_FAIL';
+export const DELETE_PRODUCT = 'application/DELETE_PRODUCT';
+export const DELETE_PRODUCT_SUCCESS = 'application/DELETE_PRODUCT_SUCCESS';
+export const DELETE_PRODUCT_FAIL = 'application/DELETE_PRODUCT_FAIL';
 
-export const CREATE_APP = 'application/CREATE_APP';
-export const CREATE_APP_SUCCESS = 'application/CREATE_APP_SUCCESS';
-export const CREATE_APP_FAIL = 'application/CREATE_APP_FAIL';
+export const SAVE_PRODUCT = 'application/SAVE_PRODUCT';
+export const SAVE_PRODUCT_SUCCESS = 'application/SAVE_PRODUCT_SUCCESS';
+export const SAVE_PRODUCT_FAIL = 'application/SAVE_PRODUCT_FAIL';
 
-export const DELETE_APP = 'application/DELETE_APP';
-export const DELETE_APP_SUCCESS = 'application/DELETE_APP_SUCCESS';
-export const DELETE_APP_FAIL = 'application/DELETE_APP_FAIL';
-
-export const UPDATE_APP = 'application/UPDATE_APP';
-export const UPDATE_APP_SUCCESS = 'application/UPDATE_APP_SUCCESS';
-export const UPDATE_APP_FAIL = 'application/UPDATE_APP_FAIL';
-
-export const PUBLISH_APP = 'application/PUBLISH_APP';
-export const PUBLISH_APP_SUCCESS = 'application/PUBLISH_APP_SUCCESS';
-export const PUBLISH_APP_FAIL = 'application/PUBLISH_APP_FAIL';
-
-export function loadApp() {
+export function loadProducts() {
   return (dispatch, getState) => {
     const products = getState().app.products;
-    if ((!products.loaded && !products.loading)) {
-      dispatch(requestApp());
+    if (!products.loading) {
+      dispatch(fetchProducts());
       return request({
         url: `${host}/service/product/app/list`,
-        method: 'get'
+        method: 'get',
+        ...requestOptions
       }).then(
-        (json) => requestAppSuccess(json),
-        (err, msg) => requestAppFail(msg)
+        (json) => dispatch(fetchProductsSuccess(json)),
+        (err, msg) => dispatch(fetchProductsFail(msg))
       );
     }
   }
 }
 
-function requestApp() {
+function fetchProducts() {
   return {
-    type: LOAD_APP
+    type: FETCH_PRODUCTS
   }
 }
 
-function requestAppSuccess(json) {
+function fetchProductsSuccess(json) {
   return {
-    type: LOAD_APP_SUCCESS,
+    type: FETCH_PRODUCTS_SUCCESS,
     data: json
   }
 }
 
-function requestAppFail(msg) {
+function fetchProductsFail(msg) {
   return {
-    type: LOAD_APP_FAIL,
+    type: FETCH_PRODUCTS_FAIL,
     message: msg
   }
 }
 
-export function loadAppDetails(appId) {
+export function updateProduct(productData) {
   return (dispatch, getState) => {
-    const details = getState().app.details;
-    if (!details.loading && !details.entities.hasOwnProperty(appId)) {
-      dispatch(requestAppDetails());
-      return request({
-        url: `${host}/service/product/app/details/${appId}`,
-        method: 'get'
-      }).then(
-        (json) => requestAppDetailsSuccess(json),
-        (err, msg) => requestAppDetailsFail(msg)
+    const products = getState().app.products;
+    if (!products.loading) {
+      dispatch(saveProduct());
+      const options = {
+        url: `${host}/service/product/app`,
+        method: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify(productData),
+        ...requestOptions
+      };
+      return request(options).then(
+        (json) => dispatch(saveProductSuccess(json)),
+        (err, msg) => dispatch(saveProductFail(msg))
       );
     }
   }
 }
 
-function requestAppDetails() {
+function saveProduct() {
   return {
-    type: LOAD_APP_DETAILS
+    type: SAVE_PRODUCT
   }
 }
 
-function requestAppDetailsSuccess(json) {
+function saveProductSuccess(json) {
   return {
-    type: LOAD_APP_DETAILS_SUCCESS,
+    type: SAVE_PRODUCT_SUCCESS,
     data: json
   }
 }
 
-function requestAppDetailsFail(msg) {
+function saveProductFail(msg) {
   return {
-    type: LOAD_APP_DETAILS_FAIL,
+    type: SAVE_PRODUCT_FAIL,
     message: msg
   }
 }
 
-export function loadAppReports(appId) {
+
+export function destroyProduct(productId) {
   return (dispatch, getState) => {
-    const details = getState().app.details;
-    if (!details.loading && !details.entities.hasOwnProperty(appId)) {
-      dispatch(requestAppReports());
-      return request({
-        url: `${host}/service/product/app/reports/${appId}`,
-        method: 'get'
-      }).then(
-        (json) => requestAppReportsSuccess(json),
-        (err, msg) => requestAppReportsFail(msg)
+    const products = getState().app.products;
+    if (!products.loading) {
+      dispatch(deleteProduct());
+      const options = {
+        url: `${host}/service/product/app`,
+        method: 'delete',
+        contentType: 'application/json',
+        data: JSON.stringify(productId),
+        ...requestOptions
+      };
+      return request(options).then(
+        () => dispatch(deleteProductSuccess(productId)),
+        (err, msg) => dispatch(deleteProductFail(msg))
       );
     }
   }
 }
 
-function requestAppReports() {
+function deleteProduct() {
   return {
-    type: LOAD_APP_REPORTS
+    type: DELETE_PRODUCT
   }
 }
 
-function requestAppReportsSuccess(json) {
+function deleteProductSuccess(productId) {
   return {
-    type: LOAD_APP_REPORTS_SUCCESS,
-    data: json
+    type: DELETE_PRODUCT_SUCCESS,
+    data: productId
   }
 }
 
-function requestAppReportsFail(msg) {
+function deleteProductFail(msg) {
   return {
-    type: LOAD_APP_REPORTS_FAIL,
+    type: DELETE_PRODUCT_FAIL,
     message: msg
   }
 }
 
-export function createApp(app) {
-
+export function loadProductReports(productId, period) {
+  return (dispatch, getState) => {
+    dispatch(fetchProductReports());
+    return request({
+      url: `${host}/service/product/app/reports/${productId}`,
+      method: 'get',
+      data: {period: period},
+      ...requestOptions
+    }).then(
+      (json) => dispatch(fetchProductReportsSuccess(json)),
+      (err, msg) => dispatch(fetchProductReportsFail(msg))
+    );
+  }
 }
 
-export function deleteApp(appId) {
-
+function fetchProductReports() {
+  return {
+    type: FETCH_PRODUCT_REPORTS
+  }
 }
 
-export function updateApp(app) {
-
+function fetchProductReportsSuccess(json) {
+  return {
+    type: FETCH_PRODUCT_REPORTS_SUCCESS,
+    data: json
+  }
 }
 
-export function publishApp(appId) {
-
+function fetchProductReportsFail(msg) {
+  return {
+    type: FETCH_PRODUCT_REPORTS_FAIL,
+    message: msg
+  }
 }

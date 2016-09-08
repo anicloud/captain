@@ -2,8 +2,10 @@ package com.ani.captain.interfaces.web.controller;
 
 import com.ani.captain.interfaces.web.controller.dto.function.FunctionGroupData;
 import com.ani.captain.interfaces.web.controller.dto.function.FunctionMetaData;
+import com.ani.octopus.stub.core.service.AniStubMetaService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,24 +15,29 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/service/api")
-@CrossOrigin(origins = "http://localhost:8080")
+//@CrossOrigin(origins = "http://localhost:8080")
 public class ApiController {
-    @RequestMapping(value = "/groups", method = RequestMethod.GET)
+    final long accountId = 764111382711898568L;
+
+    @Resource
+    AniStubMetaService aniStubMetaService;
+
+    @RequestMapping(value = "/group/list", method = RequestMethod.GET)
     List<FunctionGroupData> getGroups() {
         return new ArrayList<>();
     }
 
-    @RequestMapping(value = "/groups", method = RequestMethod.POST)
+    @RequestMapping(value = "/group", method = RequestMethod.POST)
     FunctionGroupData saveGroup(@RequestBody FunctionGroupData groupData) {
         return groupData;
     }
 
-    @RequestMapping(value = "/details/{fid}", method = RequestMethod.GET)
-    FunctionMetaData getDetails(@PathVariable Integer fid) {
+    @RequestMapping(value = "/function/{fid}", method = RequestMethod.GET)
+    FunctionMetaData getDetails(@PathVariable int fid) {
         return new FunctionMetaData();
     }
 
-    @RequestMapping(value = "/details", method = RequestMethod.POST)
+    @RequestMapping(value = "/function", method = RequestMethod.POST)
     FunctionMetaData saveDetails(@RequestBody FunctionMetaData metaData) {
         return metaData;
     }

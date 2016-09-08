@@ -1,8 +1,8 @@
 /**
  * Created by huangbin on 8/15/16.
  */
-import * as _ from 'lodash';
 import * as t from './actions';
+import keyBy from 'lodash.keyby';
 
 const initialState = {
   devices: {
@@ -286,32 +286,41 @@ const initialState = {
     entities: {
       '1': {
         functionId: '1',
-        groupId: '1',
-        groupName: 'Power',
+        group: {
+          groupId: '1',
+          name: 'Power'
+        },
         name: 'powerOn',
-        description: '打开设备',
-        inputArguments: [],
-        outputArguments: []
+        connType: 'sync',
+        accessType: 'executable',
+        input: [],
+        output: []
       },
       '2': {
         functionId: '2',
-        groupId: '1',
-        groupName: 'Power',
+        group: {
+          groupId: '1',
+          name: 'Power'
+        },
         name: 'powerOff',
-        description: '关闭设备',
-        inputArguments: [],
-        outputArguments: []
+        connType: 'sync',
+        accessType: 'executable',
+        input: [],
+        output: []
       },
       '3': {
         functionId: '3',
-        groupId: '1',
-        groupName: 'Power',
+        group: {
+          groupId: '1',
+          name: 'Power'
+        },
         name: 'setVolume',
-        description: '设置音量',
-        inputArguments: [
+        connType: 'sync',
+        accessType: 'executable',
+        input: [
           {name: 'volumeSize', type: 'integer'}
         ],
-        outputArguments: []
+        output: []
       }
     }
   },
@@ -324,26 +333,26 @@ const initialState = {
 
 function devices(state, action) {
   switch (action.type) {
-    case t.REQUEST_DEBUG_DEVICES:
+    case t.FETCH_DEBUG_DEVICES:
     {
-      return _.assign({}, state, {
+      return Object.assign({}, state, {
         loading: true,
         loaded: false,
         entities: {}
       });
     }
-    case t.REQUEST_DEBUG_DEVICES_SUCCESS:
+    case t.FETCH_DEBUG_DEVICES_SUCCESS:
     {
-      return _.assign({}, state, {
-        loading: true,
-        loaded: false,
-        entities: _.keyBy(action.data, 'deviceId')
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true,
+        entities: keyBy(action.data, 'deviceId')
       });
     }
-    case t.REQUEST_DEBUG_DEVICES_FAIL:
+    case t.FETCH_DEBUG_DEVICES_FAIL:
     {
-      return _.assign({}, state, {
-        loading: true,
+      return Object.assign({}, state, {
+        loading: false,
         loaded: false,
         message: action.message,
         entities: {}
@@ -356,24 +365,24 @@ function devices(state, action) {
 
 function functions(state, action) {
   switch (action.type) {
-    case t.REQUEST_DEBUG_FUNCTIONS:
+    case t.FETCH_DEBUG_FUNCTIONS:
     {
-      return _.merge({}, state, {
+      return merge({}, state, {
         loading: true,
         message: ''
       })
     }
-    case t.REQUEST_DEBUG_FUNCTIONS_SUCCESS:
+    case t.FETCH_DEBUG_FUNCTIONS_SUCCESS:
     {
-      return _.merge({}, state, {
+      return merge({}, state, {
         loading: false,
         message: '',
-        entities: _.keyBy(action.data, 'functionId')
+        entities: keyBy(action.data, 'functionId')
       });
     }
-    case t.REQUEST_DEBUG_FUNCTIONS_FAIL:
+    case t.FETCH_DEBUG_FUNCTIONS_FAIL:
     {
-      return _.merge({}, state, {
+      return merge({}, state, {
         loading: false,
         message: action.message
       })
@@ -385,9 +394,9 @@ function functions(state, action) {
 
 function invocations(state, action) {
   switch (action.type) {
-    case t.REQUEST_INVOCATION:
+    case t.FETCH_INVOCATION:
     {
-      let nextState = _.merge({}, state, {
+      let nextState = merge({}, state, {
         entities: {
           [`${action.key}`]: action.data
         },
@@ -398,9 +407,9 @@ function invocations(state, action) {
       }
       return nextState;
     }
-    case t.REQUEST_INVOCATION_SUCCESS:
+    case t.FETCH_INVOCATION_SUCCESS:
     {
-      let nextState = _.merge({}, state, {
+      let nextState = merge({}, state, {
         entities: {
           [`${action.key}`]: action.data
         },
@@ -409,9 +418,9 @@ function invocations(state, action) {
       nextState.loadingKeys = nextState.loadingKeys.filter(key => key != action.key);
       return nextState;
     }
-    case t.REQUEST_INVOCATION_FAIL:
+    case t.FETCH_INVOCATION_FAIL:
     {
-      let nextState = _.merge({}, state, {
+      let nextState = merge({}, state, {
         message: ''
       });
       nextState.loadingKeys = nextState.loadingKeys.filter(key => key != action.key);
@@ -423,7 +432,24 @@ function invocations(state, action) {
   }
 }
 
-export default function (state = initialState, action = {}) {
+export default function (state = {
+  devices: {
+    loading: false,
+    loaded: false,
+    message: '',
+    entities: {}
+  },
+  functions: {
+    loading: false,
+    message: '',
+    entities: {}
+  },
+  invocations: {
+    message: '',
+    loadingKeys: [],
+    entities: {}
+  }
+}, action = {}) {
   return Object.assign({}, state, {
     devices: devices(state.devices, action),
     functions: functions(state.functions, action),

@@ -3,18 +3,21 @@
  */
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
+import {createApi} from './actions';
 
 import './ApiRegister.less';
 
 class ApiRegisterApi extends Component {
   constructor(props) {
     super(props);
-    this.getArgRow = this.getArgRow.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
     this.onCreateArg = this.onCreateArg.bind(this);
     this.onDeleteArg = this.onDeleteArg.bind(this);
     this.state = {
-      inputArgs: [],
-      outputArgs: []
+      inputArgs: {},
+      outputArgs: {},
+      inputArgKeys: [],
+      outputArgKeys: []
     };
   }
 
@@ -22,88 +25,113 @@ class ApiRegisterApi extends Component {
 
   }
 
-  getArgRow() {
+  onSubmit() {
+    const apiData = {
+      name: this.refs.name.value,
+      group: {groupId: this.refs.groupId.value},
+      input: Object.values(this.state.inputArgs),
+      output: Object.values(this.state.outputArgs)
+      // description: this.refs.description.value,
+      // returnType: this.refs.returnType.value,
 
+    };
+    console.log(apiData);
+    this.props.createApi(apiData);
   }
 
   onCreateArg(tag) {
-    const date = `${Date.now()}`;
-    const newArg =
-      <div className="arg" key={date}>
-        <div className="name">
-          <input className="input-arg" type="text" placeholder="参数名称"/>
-        </div>
-        <div className="type">
-          <select>
-            <option>参数类型</option>
-            <option>Short</option>
-            <option>Integer</option>
-            <option>Long</option>
-            <option>Float</option>
-            <option>Double</option>
-            <option>Boolean</option>
-          </select>
-        </div>
-        <div className="action-btn">
-          <button className="btn btn-default" onClick={e => this.onDeleteArg(date, tag)}>删除参数</button>
-        </div>
-      </div>;
-
+    const key = `${Date.now()}`;
     if (tag === 'input') {
+      let inputArgKeys = this.state.inputArgKeys;
+      inputArgKeys.push(key);
       let inputArgs = this.state.inputArgs;
-      inputArgs.push(newArg);
-      this.setState({inputArgs});
+      inputArgs[key] = {name: this.refs.tempInputName.value, type: this.refs.tempInputType.value};
+      this.setState({inputArgs, inputArgKeys});
     } else if (tag === 'output') {
+      let outputArgKeys = this.state.outputArgKeys;
+      outputArgKeys.push(key);
       let outputArgs = this.state.outputArgs;
-      outputArgs.push(newArg);
-      this.setState({outputArgs});
+      outputArgs[key] = {name: this.refs.tempOutputName.value, type: this.refs.tempOutputType.value};
+      this.setState({outputArgs, outputArgKeys});
     }
   }
 
   onDeleteArg(key, tag) {
     if (tag === 'input') {
+      let inputArgKeys = this.state.inputArgKeys.filter(argKey => argKey !== key);
       let inputArgs = this.state.inputArgs;
-      const index = inputArgs.findIndex(child => {
-        return child.key === key;
-      });
-      if (index !== -1) {
-        inputArgs.splice(index, 1);
-        this.setState({inputArgs});
-      }
+      delete inputArgs[key];
+      this.setState({inputArgKeys, inputArgs});
     } else if (tag === 'output') {
+      let outputArgKeys = this.state.outputArgKeys.filter(argKey => argKey !== key);
       let outputArgs = this.state.outputArgs;
-      const index = outputArgs.findIndex(child => {
-        return child.key === key;
-      });
-      if (index !== -1) {
-        outputArgs.splice(index, 1);
-        this.setState({outputArgs});
-      }
+      delete outputArgs[key];
+      this.setState({outputArgKeys, outputArgs});
     }
   }
 
   render() {
     const state = this.state;
     const props = this.props;
+
+    const inputArgElems = state.inputArgKeys.map(key => {
+      const nameRef = `name_${key}`;
+      const typeRef = `type_${key}`;
+      return (
+        <div className="arg" key={key}>
+          <div className="name">
+            <input ref={nameRef} defaultValue={state.inputArgs[key].name} className="input-arg" type="text"/>
+          </div>
+          <div className="type">
+            <select ref={typeRef} defaultValue={state.inputArgs[key].type}>
+              <option value="SHORT">Short</option>
+              <option value="INTEGER">Integer</option>
+              <option value="LONG">Long</option>
+              <option value="FLOAT">Float</option>
+              <option value="DOUBLE">Double</option>
+              <option value="BOOLEAN">Boolean</option>
+            </select>
+          </div>
+          <div className="action-btn">
+            <button className="btn btn-default" onClick={e => this.onDeleteArg(key, "input")}>删除参数</button>
+          </div>
+        </div>
+      );
+    });
+    const outputArgElems = state.outputArgKeys.map(key => {
+      const nameRef = `name_${key}`;
+      const typeRef = `type_${key}`;
+      return (
+        <div className="arg" key={key}>
+          <div className="name">
+            <input ref={nameRef} defaultValue={state.outputArgs[key].name} className="input-arg" type="text"/>
+          </div>
+          <div className="type">
+            <select ref={typeRef} defaultValue={state.outputArgs[key].type}>
+              <option value="SHORT">Short</option>
+              <option value="INTEGER">Integer</option>
+              <option value="LONG">Long</option>
+              <option value="FLOAT">Float</option>
+              <option value="DOUBLE">Double</option>
+              <option value="BOOLEAN">Boolean</option>
+            </select>
+          </div>
+          <div className="action-btn">
+            <button className="btn btn-default" onClick={e => this.onDeleteArg(key, "output")}>删除参数</button>
+          </div>
+        </div>
+      );
+    });
     return (
       <div className="api-register">
         <div className="form-group container-fluid">
           <div className="form-item row">
             <div className="item-key col-lg-6 col-lg-offset-3">
-              <div className="name">显示名称</div>
-              <div className="description">API显示名称，用于界面显示</div>
+              <div className="name">名称</div>
+              <div className="description">API名称，用于显示及后台调用</div>
             </div>
             <div className="item-value col-lg-8">
-              <input type="text" placeholder="中英文字符，长度不超过64个字符"/>
-            </div>
-          </div>
-          <div className="form-item row">
-            <div className="item-key col-lg-6 col-lg-offset-3">
-              <div className="name">原型名称</div>
-              <div className="description">API原型名称，用于后台调用</div>
-            </div>
-            <div className="item-value col-lg-8">
-              <input type="text" placeholder="英文字母或下划线，长度不超过64个字符"/>
+              <input type="text" ref="name" placeholder="英文字母或下划线，长度不超过64个字符"/>
             </div>
           </div>
           <div className="form-item row">
@@ -112,7 +140,7 @@ class ApiRegisterApi extends Component {
               <div className="description">API的用途说明</div>
             </div>
             <div className="item-value col-lg-8">
-              <textarea placeholder="长度不超过255个字符"/>
+              <textarea ref="description" placeholder="长度不超过255个字符"/>
             </div>
           </div>
           <div className="form-item row">
@@ -121,13 +149,12 @@ class ApiRegisterApi extends Component {
               <div className="description">API所属组</div>
             </div>
             <div className="item-value col-lg-8">
-              <select>
-                <option>电源</option>
-                <option>温湿度</option>
-                <option>照明</option>
-                <option>蓝牙(BLE)</option>
-                <option>ZigBee</option>
-                <option>红外</option>
+              <select ref="groupId">
+                {Object.values(props.groups.entities).map(group => {
+                  return (
+                    <option key={group.groupId} value={group.groupId}>{group.name}</option>
+                  );
+                })}
               </select>
             </div>
           </div>
@@ -137,13 +164,13 @@ class ApiRegisterApi extends Component {
               <div className="description">API返回类型</div>
             </div>
             <div className="item-value col-lg-8">
-              <select>
-                <option>Short</option>
-                <option>Integer</option>
-                <option>Long</option>
-                <option>Float</option>
-                <option>Double</option>
-                <option>Boolean</option>
+              <select ref="returnType">
+                <option value="SHORT">Short</option>
+                <option value="INTEGER">Integer</option>
+                <option value="LONG">Long</option>
+                <option value="FLOAT">Float</option>
+                <option value="DOUBLE">Double</option>
+                <option value="BOOLEAN">Boolean</option>
               </select>
             </div>
           </div>
@@ -153,20 +180,19 @@ class ApiRegisterApi extends Component {
               <div className="description">API输入参数，最多不超过32个</div>
             </div>
             <div className="item-value col-lg-10 args">
-              {state.inputArgs}
+              {inputArgElems}
               <div className="arg">
                 <div className="name">
-                  <input className="input-arg" type="text" placeholder="参数名称"/>
+                  <input ref="tempInputName" className="input-arg" type="text" placeholder="参数名称"/>
                 </div>
                 <div className="type">
-                  <select>
-                    <option>参数类型</option>
-                    <option>Short</option>
-                    <option>Integer</option>
-                    <option>Long</option>
-                    <option>Float</option>
-                    <option>Double</option>
-                    <option>Boolean</option>
+                  <select ref="tempInputType">
+                    <option value="SHORT">Short</option>
+                    <option value="INTEGER">Integer</option>
+                    <option value="LONG">Long</option>
+                    <option value="FLOAT">Float</option>
+                    <option value="DOUBLE">Double</option>
+                    <option value="BOOLEAN">Boolean</option>
                   </select>
                 </div>
                 <div className="action-btn">
@@ -181,20 +207,19 @@ class ApiRegisterApi extends Component {
               <div className="description">API输入参数，最多不超过32个</div>
             </div>
             <div className="item-value col-lg-10 args">
-              {state.outputArgs}
+              {outputArgElems}
               <div className="arg">
                 <div className="name">
-                  <input className="input-arg" type="text" placeholder="参数名称"/>
+                  <input ref="tempOutputName" className="input-arg" type="text" placeholder="参数名称"/>
                 </div>
                 <div className="type">
-                  <select>
-                    <option>参数类型</option>
-                    <option>Short</option>
-                    <option>Integer</option>
-                    <option>Long</option>
-                    <option>Float</option>
-                    <option>Double</option>
-                    <option>Boolean</option>
+                  <select ref="tempOutputType">
+                    <option value="SHORT">Short</option>
+                    <option value="INTEGER">Integer</option>
+                    <option value="LONG">Long</option>
+                    <option value="FLOAT">Float</option>
+                    <option value="DOUBLE">Double</option>
+                    <option value="BOOLEAN">Boolean</option>
                   </select>
                 </div>
                 <div className="action-btn">
@@ -205,26 +230,24 @@ class ApiRegisterApi extends Component {
           </div>
         </div>
         <div className="action">
-          <button className="btn btn-default">提交申请</button>
+          <button className="btn btn-default" onClick={this.onSubmit}>提交申请</button>
         </div>
       </div>
-    )
-      ;
+    );
   }
 }
 
 function mapStateToProps(state) {
   return {
-    ...state
+    groups: state.api.groups,
+    functions: state.api.functions
   };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {};
 }
 
 ApiRegisterApi.propTypes = {};
 
 ApiRegisterApi.defaultProps = {};
 
-export default connect(mapStateToProps)(ApiRegisterApi)
+export default connect(mapStateToProps, {
+  createApi
+})(ApiRegisterApi)

@@ -5,7 +5,19 @@ package com.ani.captain.interfaces.web.controller.dto.account;
  */
 public class AccountAppData {
     public String vendor;
+    public String intro;
     public String logo;
     public String home;
     public String creditCard;
+
+    public AccountAppData() {
+    }
+
+    public AccountAppData(String vendor, String intro, String logo, String home, String creditCard) {
+        this.vendor = vendor;
+        this.intro = intro;
+        this.logo = logo;
+        this.home = home;
+        this.creditCard = creditCard;
+    }
 }

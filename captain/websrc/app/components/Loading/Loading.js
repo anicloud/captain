@@ -5,7 +5,6 @@
 import React, {PropTypes, Component} from 'react';
 import classNames from 'classnames';
 import {noop} from '../utils';
-import {MdFileUpload} from 'react-icons/lib/md';
 
 import './Loading.less';
 

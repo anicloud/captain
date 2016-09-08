@@ -7,7 +7,8 @@ import DeviceList from './DeviceList';
 import FuncInfo from './FuncInfo';
 import DeviceStatus from './DeviceStatus';
 import DebugTools from './DebugTools';
-import * as actions from './actions';
+import Loading from 'components/Loading';
+import {loadDebugDevices, invokeFunction} from './actions';
 import './Debug.less';
 
 class Debug extends Component {
@@ -25,6 +26,12 @@ class Debug extends Component {
       curFunc: undefined,
       hoverDevice: undefined
     };
+  }
+
+  componentDidMount() {
+    if (!this.props.devices.loading) {
+      this.props.loadDebugDevices();
+    }
   }
 
   onSelectMaster(deviceId) {
@@ -58,22 +65,28 @@ class Debug extends Component {
   render() {
     const state = this.state;
     const props = this.props;
-    return (
-      <div className="debug">
-        <div className="debug-sidebar">
-          <DeviceList devices={props.devices}
-                      onSelectMaster={this.onSelectMaster}
-                      onSelectSlave={this.onSelectSlave}
-                      onHover={this.onHoverDevice}/>
-          <DeviceStatus device={state.hoverDevice}/>
+    if (props.devices.loading) {
+      return (
+        <Loading />
+      )
+    } else {
+      return (
+        <div className="debug">
+          <div className="debug-sidebar">
+            <DeviceList devices={props.devices}
+                        onSelectMaster={this.onSelectMaster}
+                        onSelectSlave={this.onSelectSlave}
+                        onHover={this.onHoverDevice}/>
+            <DeviceStatus device={state.hoverDevice}/>
+          </div>
+          <div className="debug-content">
+            <FuncInfo device={state.curDevice} functions={props.functions} onSelectFunc={this.onSelectFunc}/>
+            <DebugTools device={state.curDevice} invocations={props.invocations} selectedFunc={state.curFunc}
+                        onInvoke={this.onInvoke}/>
+          </div>
         </div>
-        <div className="debug-content">
-          <FuncInfo device={state.curDevice} functions={props.functions} onSelectFunc={this.onSelectFunc}/>
-          <DebugTools device={state.curDevice} invocations={props.invocations} selectedFunc={state.curFunc}
-                      onInvoke={this.onInvoke}/>
-        </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
@@ -90,5 +103,6 @@ Debug.propTypes = {};
 Debug.defaultProps = {};
 
 export default connect(mapStateToProps, {
-  invokeFunction: actions.invokeFunction
+  loadDebugDevices,
+  invokeFunction
 })(Debug)

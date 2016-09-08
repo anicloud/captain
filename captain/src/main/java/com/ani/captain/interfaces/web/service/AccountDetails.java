@@ -1,7 +1,7 @@
 package com.ani.captain.interfaces.web.service;
 
-import com.ani.octopus.commons.accout.dto.AccountDto;
-import com.ani.octopus.commons.accout.dto.AccountGroupDto;
+import com.ani.earth.commons.dto.AccountDto;
+import com.ani.earth.commons.dto.AccountGroupDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

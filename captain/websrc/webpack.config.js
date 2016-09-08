@@ -10,6 +10,7 @@ var definePlugin = new webpack.DefinePlugin({
 });
 
 module.exports = {
+  devtool: 'source-map',
   devServer: {
     historyApiFallback: true,
     hot: true,
@@ -25,35 +26,29 @@ module.exports = {
       path.resolve(__dirname, 'app/index.js')
     ],
     vendor: [
-      'react', 'react-dom'
+      'react', 'react-dom', 'react-router',
+      'redux', 'react-redux', 'react-router-redux'
     ]
   },
-
   output: {
-    path: path.resolve(__dirname, './public'),
+    path: path.resolve(__dirname, 'public'),
     filename: "[name].js",
     publicPath: '/'
   },
-
   resolve: {
-    extension: ['', '.jsx', '.js', '.json']
+    extension: ['', '.jsx', '.js', '.json'],
+    root: [
+      path.resolve(__dirname, 'app')
+    ],
+    alias: {}
   },
-
-  devtool: 'source-map',
-  'display-error-details': true,
-
-  externals: [],
   module: {
+    noParse: [],
     loaders: [
       {
         test: /\.js[x]?$/,
         loaders: ['react-hot', 'babel'],
         exclude: path.resolve(__dirname, 'node_modules')
-      },
-      {
-        test: /\.css/,
-        loader: 'style-loader!css-loader'
-        // loader: ExtractTextPlugin.extract("style-loader", "css-loader")
       },
       {
         test: /\.less/,
@@ -72,13 +67,13 @@ module.exports = {
   },
   plugins: [
     definePlugin,
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new webpack.optimize.DedupePlugin(),
     new HtmlWebpackPlugin({
       title: 'Captain',
       template: './app/index.html'
     }),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new webpack.optimize.DedupePlugin(),
     new OpenBrowserPlugin({url: 'http://localhost:8080'})
     // new ExtractTextPlugin("app.css", {
     //   allChunks: true,

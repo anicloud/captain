@@ -1,53 +1,54 @@
 /**
  * Created by huangbin on 8/15/16.
  */
-import {host} from '../constants';
+import {host, requestOptions} from '../constants';
 import request from 'reqwest';
 
-export const REQUEST_DEBUG_DEVICES = 'debug/REQUEST_DEBUG_DEVICES';
-export const REQUEST_DEBUG_DEVICES_SUCCESS = 'debug/REQUEST_DEBUG_DEVICES_SUCCESS';
-export const REQUEST_DEBUG_DEVICES_FAIL = 'debug/REQUEST_DEBUG_DEVICES_FAIL';
+export const FETCH_DEBUG_DEVICES = 'debug/FETCH_DEBUG_DEVICES';
+export const FETCH_DEBUG_DEVICES_SUCCESS = 'debug/FETCH_DEBUG_DEVICES_SUCCESS';
+export const FETCH_DEBUG_DEVICES_FAIL = 'debug/FETCH_DEBUG_DEVICES_FAIL';
 
-export const REQUEST_DEBUG_FUNCTIONS = 'debug/REQUEST_DEBUG_API';
-export const REQUEST_DEBUG_FUNCTIONS_SUCCESS = 'debug/REQUEST_DEBUG_FUNCTIONS_SUCCESS';
-export const REQUEST_DEBUG_FUNCTIONS_FAIL = 'debug/REQUEST_DEBUG_FUNCTIONS_FAIL';
+export const FETCH_DEBUG_FUNCTIONS = 'debug/FETCH_DEBUG_API';
+export const FETCH_DEBUG_FUNCTIONS_SUCCESS = 'debug/FETCH_DEBUG_FUNCTIONS_SUCCESS';
+export const FETCH_DEBUG_FUNCTIONS_FAIL = 'debug/FETCH_DEBUG_FUNCTIONS_FAIL';
 
-export const REQUEST_INVOCATION = 'debug/REQUEST_INVOCATION';
-export const REQUEST_INVOCATION_SUCCESS = 'debug/REQUEST_INVOCATION_SUCCESS';
-export const REQUEST_INVOCATION_FAIL = 'debug/REQUEST_INVOCATION_FAIL';
+export const FETCH_INVOCATION = 'debug/FETCH_INVOCATION';
+export const FETCH_INVOCATION_SUCCESS = 'debug/FETCH_INVOCATION_SUCCESS';
+export const FETCH_INVOCATION_FAIL = 'debug/FETCH_INVOCATION_FAIL';
 
 export function loadDebugDevices() {
   return (dispatch, getState) => {
     const devices = getState().debug.devices;
     if (!devices.loading) {
-      dispatch(requestDebugDevices());
+      dispatch(fetchDebugDevices());
       return request({
         url: `${host}/service/debug/device/list`,
-        method: 'get'
+        method: 'get',
+        ...requestOptions
       }).then(
-        (json) => dispatch(requestDebugDevicesSuccess(json)),
-        (err, msg) => dispatch(requestDebugDevicesFail(msg))
+        (json) => dispatch(fetchDebugDevicesSuccess(json)),
+        (err, msg) => dispatch(fetchDebugDevicesFail(msg))
       );
     }
   }
 }
 
-function requestDebugDevices() {
+function fetchDebugDevices() {
   return {
-    type: REQUEST_DEBUG_DEVICES
+    type: FETCH_DEBUG_DEVICES
   }
 }
 
-function requestDebugDevicesSuccess(json) {
+function fetchDebugDevicesSuccess(json) {
   return {
-    type: REQUEST_DEBUG_DEVICES_SUCCESS,
+    type: FETCH_DEBUG_DEVICES_SUCCESS,
     data: json
   }
 }
 
-function requestDebugDevicesFail(msg) {
+function fetchDebugDevicesFail(msg) {
   return {
-    type: REQUEST_DEBUG_DEVICES_FAIL,
+    type: FETCH_DEBUG_DEVICES_FAIL,
     message: msg
   }
 }
@@ -56,35 +57,36 @@ export function loadDebugFunctions(deviceId) {
   return (dispatch, getState) => {
     const functions = getState().debug.functions;
     if (!functions.loading && !functions.entities[deviceId]) {
-      dispatch(requestDebugFunctions());
+      dispatch(fetchDebugFunctions());
       const [masterId, slaveId] = deviceId.split('_', 2);
       return request({
         url: `${host}/service/debug/functions/${masterId}/${slaveId}`,
-        method: 'get'
+        method: 'get',
+        ...requestOptions
       }).then(
-        (json) => dispatch(requestDebugFunctionsSuccess(json)),
-        (err, msg) => dispatch(requestDebugFunctionsFail(msg))
+        (json) => dispatch(fetchDebugFunctionsSuccess(json)),
+        (err, msg) => dispatch(fetchDebugFunctionsFail(msg))
       );
     }
   }
 }
 
-function requestDebugFunctions() {
+function fetchDebugFunctions() {
   return {
-    type: REQUEST_DEBUG_FUNCTIONS
+    type: FETCH_DEBUG_FUNCTIONS
   }
 }
 
-function requestDebugFunctionsSuccess(json) {
+function fetchDebugFunctionsSuccess(json) {
   return {
-    type: REQUEST_DEBUG_FUNCTIONS_SUCCESS,
+    type: FETCH_DEBUG_FUNCTIONS_SUCCESS,
     data: json
   }
 }
 
-function requestDebugFunctionsFail(msg) {
+function fetchDebugFunctionsFail(msg) {
   return {
-    type: REQUEST_DEBUG_FUNCTIONS_FAIL,
+    type: FETCH_DEBUG_FUNCTIONS_FAIL,
     message: msg
   }
 }
@@ -93,41 +95,41 @@ export function invokeFunction(key, invocation) {
   return (dispatch, getState) => {
     const invocations = getState().debug.invocations;
     if (!invocations.loadingKeys.includes(key)) {
-      dispatch(requestInvocation(key, invocation));
+      dispatch(fetchInvocation(key, invocation));
       return request({
         url: `${host}/service/debug/function/invoke`,
         method: 'POST',
         contentType: 'application/json',
-        type: 'json',
-        data: JSON.stringify(invocation)
+        data: JSON.stringify(invocation),
+        ...requestOptions
       })
       .then(
-        (json) => dispatch(requestInvocationSuccess(key, json)),
-        (err, msg) => dispatch(requestInvocationFail(key, msg))
+        (json) => dispatch(fetchInvocationSuccess(key, json)),
+        (err, msg) => dispatch(fetchInvocationFail(key, msg))
       );
     }
   }
 }
 
-function requestInvocation(key, data) {
+function fetchInvocation(key, data) {
   return {
-    type: REQUEST_INVOCATION,
+    type: FETCH_INVOCATION,
     key: key,
     data: data
   }
 }
 
-function requestInvocationSuccess(key, data) {
+function fetchInvocationSuccess(key, data) {
   return {
-    type: REQUEST_INVOCATION_SUCCESS,
+    type: FETCH_INVOCATION_SUCCESS,
     key: key,
     data: data
   }
 }
 
-function requestInvocationFail(key, msg) {
+function fetchInvocationFail(key, msg) {
   return {
-    type: REQUEST_INVOCATION_FAIL,
+    type: FETCH_INVOCATION_FAIL,
     key: key,
     message: msg
   }

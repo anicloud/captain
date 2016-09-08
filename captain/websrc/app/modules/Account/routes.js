@@ -1,83 +1,81 @@
 /**
  * Created by huangbin on 7/29/16.
  */
+export default (store) => {
 
-export default {
-  path: 'account',
-  component: require('./Account').default,
-  indexRoute: {
-    component: require('./AccountInfo/AccountInfo').default
-  },
-  childRoutes: [
-    {
-      path: 'app',
-      getComponent: (nextState, cb) => {
-        require.ensure([], (require) => {
-          cb(null, require('./AppAccount/AppAccount').default)
-        });
-      },
-      indexRoute: {
-        onEnter: (nextState, replace) => {
-          if (!nextState.account || !nextState.account.isAppDeveloper) {
-            // replace('/account/app/register');
-          }
-        },
-        getComponent: (nextState, cb) => {
-          require.ensure([], (require) => {
-            cb(null, require('./AppAccount/AppAccountManager').default)
-          });
-        }
-      },
-      childRoutes: [
-        {
-          path: 'register',
-          onEnter: (nextState, replace) => {
-            if (nextState.account && nextState.account.isAppDeveloper) {
-              replace('/account/app');
-            }
-          },
-          getComponent: (nextState, cb) => {
-            require.ensure([], (require) => {
-              cb(null, require('./AppAccount/AppAccountRegister').default);
-            });
-          }
-        }
-      ]
+  return {
+    path: 'account',
+    getComponent: (nextState, cb) => {
+      require.ensure([], (require) => {
+        cb(null, require('./Account').default)
+      })
     },
-    {
-      path: 'device',
+    // component: require('./Account').default,
+    indexRoute: {
       getComponent: (nextState, cb) => {
         require.ensure([], (require) => {
-          cb(null, require('./DeviceAccount/DeviceAccount').default)
-        });
+          cb(null, require('./AccountInfo/AccountInfo').default)
+        })
       },
-      indexRoute: {
-        onEnter: (nextState, replace) => {
-          if (!nextState.account || !nextState.account.isDeviceDeveloper) {
-            // replace('/account/device/register');
-          }
-        },
+      // component: require('./AccountInfo/AccountInfo').default
+    },
+    childRoutes: [
+      {
+        path: 'app',
         getComponent: (nextState, cb) => {
           require.ensure([], (require) => {
-            cb(null, require('./DeviceAccount/DeviceAccountManager').default)
-          });
-        }
-      },
-      childRoutes: [
-        {
-          path: 'register',
-          onEnter: (nextState, replace) => {
-            if (nextState.account && nextState.account.isDeviceDeveloper) {
-              replace('/account/device');
-            }
-          },
+            cb(null, require('./AccountApp/AccountApp').default)
+          })
+        },
+        // component: require('./AccountApp/AccountApp').default,
+        indexRoute: {
+          // component: require('./AccountApp/AccountAppSettings').default,
           getComponent: (nextState, cb) => {
             require.ensure([], (require) => {
-              cb(null, require('./DeviceAccount/DeviceAccountRegister').default);
+              cb(null, require('./AccountApp/AccountAppSettings').default)
+            })
+          }
+        },
+        childRoutes: [
+          {
+            path: 'register',
+            // component: require('./AccountApp/AccountAppRegister').default,
+            getComponent: (nextState, cb) => {
+              require.ensure([], (require) => {
+                cb(null, require('./AccountApp/AccountAppRegister').default)
+              })
+            }
+          }
+        ]
+      },
+      {
+        path: 'device',
+        // component: require('./AccountDevice/AccountDevice').default,
+        getComponent: (nextState, cb) => {
+          require.ensure([], (require) => {
+            cb(null, require('./AccountDevice/AccountDevice').default)
+          });
+        },
+        indexRoute: {
+          // component: require('./AccountDevice/AccountDeviceSettings').default,
+          getComponent: (nextState, cb) => {
+            require.ensure([], (require) => {
+              cb(null, require('./AccountDevice/AccountDeviceSettings').default)
             });
           }
-        }
-      ]
-    }
-  ]
-};
+        },
+        childRoutes: [
+          {
+            path: 'register',
+            // component: require('./AccountDevice/AccountDeviceRegister').default,
+            getComponent: (nextState, cb) => {
+              require.ensure([], (require) => {
+                cb(null, require('./AccountDevice/AccountDeviceRegister').default);
+              });
+            }
+          }
+        ]
+      }
+    ]
+  };
+}

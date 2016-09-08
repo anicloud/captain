@@ -1,19 +1,38 @@
 package com.ani.captain.domain.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by huangbin on 8/24/16.
  */
-public class ProductAppReport {
-    private Long productId;
-    private Long time;
-    private Integer activeUsers;
-    private Integer installed;
-    private Integer launched;
+@Entity
+@Table(name = "ProductAppReport")
+public class ProductAppReport implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long Id;
+
+    @Column(name = "productId")
+    private long productId;
+
+    @Column(name = "time")
+    private long time;
+
+    @Column(name = "activeUsers")
+    private int activeUsers;
+
+    @Column(name = "installed")
+    private int installed;
+
+    @Column(name = "launched")
+    private int launched;
 
     public ProductAppReport() {
     }
 
-    public ProductAppReport(Long productId, Long time, Integer activeUsers, Integer installed, Integer launched) {
+    public ProductAppReport(long productId, long time, int activeUsers, int installed, int launched) {
         this.productId = productId;
         this.time = time;
         this.activeUsers = activeUsers;
@@ -21,43 +40,43 @@ public class ProductAppReport {
         this.launched = launched;
     }
 
-    public Integer getActiveUsers() {
+    public int getActiveUsers() {
         return activeUsers;
     }
 
-    public void setActiveUsers(Integer activeUsers) {
+    public void setActiveUsers(int activeUsers) {
         this.activeUsers = activeUsers;
     }
 
-    public Integer getInstalled() {
+    public int getInstalled() {
         return installed;
     }
 
-    public void setInstalled(Integer installed) {
+    public void setInstalled(int installed) {
         this.installed = installed;
     }
 
-    public Integer getLaunched() {
+    public int getLaunched() {
         return launched;
     }
 
-    public void setLaunched(Integer launched) {
+    public void setLaunched(int launched) {
         this.launched = launched;
     }
 
-    public Long getProductId() {
+    public long getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(long productId) {
         this.productId = productId;
     }
 
-    public Long getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(Long time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }

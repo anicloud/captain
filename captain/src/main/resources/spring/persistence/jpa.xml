@@ -47,7 +47,7 @@
     <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
     <property name="packagesToScan">
       <list>
-        <value>com.ani.captain.infrastructure.persistence.dao</value>
+        <value>com.ani.captain.domain.model</value>
       </list>
     </property>
     <property name="jpaProperties">

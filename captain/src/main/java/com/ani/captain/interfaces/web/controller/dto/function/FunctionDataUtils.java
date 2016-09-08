@@ -1,6 +1,6 @@
 package com.ani.captain.interfaces.web.controller.dto.function;
 
-import com.ani.captain.interfaces.web.controller.dto.device.FunctionData;
+import com.ani.captain.interfaces.web.controller.dto.debug.FunctionData;
 import com.ani.octopus.antenna.core.dto.stub.StubInvocationDto;
 import com.ani.octopus.commons.stub.enumeration.PrivilegeType;
 import com.ani.octopus.commons.stub.enumeration.StubConnType;
@@ -193,12 +193,12 @@ public class FunctionDataUtils {
                 );
     }
 
-    public static InvocationData fromStubInvocationDto(Long deviceId, Integer slaveId, StubInvocationDto invocationDto) {
-        if (deviceId == null || slaveId == null || invocationDto == null) {
+    public static InvocationData fromStubInvocationDto(long deviceId, int slaveId, StubInvocationDto invocationDto) {
+        if (invocationDto == null) {
             return null;
         }
         InvocationData data = new InvocationData();
-        data.deviceId = deviceId.toString();
+        data.deviceId = String.valueOf(deviceId);
         data.slaveId = slaveId;
         data.function = new FunctionData(invocationDto.stub.stubId, invocationDto.stub.group.toString());
         data.inputValues = invocationDto.inputArgsValue;

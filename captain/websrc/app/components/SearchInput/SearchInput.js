@@ -2,9 +2,8 @@
  * Created by huangbin on 8/4/16.
  */
 import React, {PropTypes, Component} from 'react';
-import {MdSearch} from 'react-icons/lib/md';
+import MdSearch from 'react-icons/lib/md/search';
 import classNames from 'classnames';
-import {noop} from '../utils';
 
 import './SearchInput.less';
 
@@ -23,10 +22,13 @@ class SearchInput extends Component {
   }
 
   componentDidMount() {
-    const props = this.props;
-    if (props.autoComplete && props.dataSource && props.dataSource.length > 0) {
+    this.componentWillReceiveProps(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.autoComplete && nextProps.dataSource && nextProps.dataSource.length > 0) {
       this.setState({
-        visibleData: this.props.dataSource,
+        visibleData: nextProps.dataSource,
         autoComplete: true
       });
     }
@@ -144,13 +146,13 @@ SearchInput.propTypes = {
 };
 
 SearchInput.defaultProps = {
-  onFocus: noop,
-  onBlur: noop,
-  onChange: noop,
+  onFocus: () => {},
+  onBlur: () => {},
+  onChange: () => {},
   autoComplete: false,
   dataSource: [],
   filter: null,
-  onSelect: noop
+  onSelect: () => {}
 };
 
 export default SearchInput;

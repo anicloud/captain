@@ -5,63 +5,78 @@ import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {push} from 'react-router-redux';
 import MdClose from 'react-icons/lib/md/close';
-import Modal from '../../components/Modal';
-import SearchInput from '../../components/SearchInput';
+import Modal from 'components/Modal';
+import SearchInput from 'components/SearchInput';
+import {dateFormat} from 'components/utils';
+import {updateProduct} from './actions';
 
 import './AppProductsList.less';
 
 class AppProductsList extends Component {
   constructor(props) {
     super(props);
-    this.onCreateApp = this.onCreateApp.bind(this);
+    this.onAddProduct = this.onAddProduct.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onGotoDetails = this.onGotoDetails.bind(this);
     this.onFilter = this.onFilter.bind(this);
     this.state = {
-      addingApp: false,
+      addingProduct: false,
       filter: '',
-      visibleApps: []
+      visibleProducts: []
     };
   }
 
   componentDidMount() {
-    let visibleApps = [];
-    for (let entity of Object.values(this.props.products.entities)) {
-      visibleApps.push(entity);
-    }
-    this.setState({visibleApps})
+    this.setState({visibleProducts: Object.values(this.props.products.entities)});
   }
 
-  onCreateApp(e) {
-    let addingApp = this.state.addingApp;
-    if (!addingApp) {
-      addingApp = true;
-      this.setState({addingApp});
-    }
+  componentWillReceiveProps(nextProps) {
+    this.setState({visibleProducts: Object.values(nextProps.products.entities)});
   }
 
-  onCancel(e) {
-    let addingApp = this.state.addingApp;
-    if (addingApp) {
-      addingApp = false;
-      this.setState({addingApp});
+  onAddProduct() {
+    let addingProduct = this.state.addingProduct;
+    if (!addingProduct) {
+      addingProduct = true;
+      this.setState({addingProduct});
     }
   }
 
-  onGotoDetails(appId, e) {
-    const url = '/application/products/' + appId;
-    this.props.dispatch(push(url));
+  onUpdate() {
+    let addingProduct = this.state.addingProduct;
+    if (addingProduct) {
+      this.props.updateProduct({
+        name: this.refs.name.value,
+        description: this.refs.description.value
+      });
+      addingProduct = false;
+      this.setState({addingProduct});
+    }
+  }
+
+  onCancel() {
+    let addingProduct = this.state.addingProduct;
+    if (addingProduct) {
+      addingProduct = false;
+      this.setState({addingProduct});
+    }
+  }
+
+  onGotoDetails(productId) {
+    const url = '/application/products/' + productId;
+    this.props.push(url);
   }
 
   onFilter(str) {
     str = str ? str.trim() : '';
-    let visibleApps = [];
+    let visibleProducts = [];
     for (let entity of Object.values(this.props.products.entities)) {
       if (str.length === 0 || entity.name.includes(str)) {
-        visibleApps.push(entity);
+        visibleProducts.push(entity);
       }
     }
-    this.setState({visibleApps});
+    this.setState({visibleProducts});
   }
 
   render() {
@@ -75,7 +90,7 @@ class AppProductsList extends Component {
             <SearchInput placeholder="输入过滤条件" onChange={this.onFilter}/>
           </div>
           <div className="add-tool">
-            <button className="btn btn-default" onClick={this.onCreateApp}>添加应用</button>
+            <button className="btn btn-default" onClick={this.onAddProduct}>添加应用</button>
           </div>
         </div>
         <div className="app-list">
@@ -91,20 +106,20 @@ class AppProductsList extends Component {
             </tr>
             </thead>
             <tbody>
-            {state.visibleApps.map(app => {
+            {state.visibleProducts.map(product => {
               return (
-                <tr key={app.appId} onClick={(e) => {this.onGotoDetails(app.appId, e)}}>
+                <tr key={product.productId} onClick={(e) => {this.onGotoDetails(product.productId)}}>
                   <td>
                     <div className="name">
-                      <span><img src={app.logo}/></span>
-                      <span>{app.name || '-'}</span>
+                      <span><img src={product.logo}/></span>
+                      <span>{product.name || '-'}</span>
                     </div>
                   </td>
-                  <td>{app.version || '-'}</td>
-                  <td>{app.installedCount || '-'}</td>
-                  <td>{app.stars || '-'}/{app.totalComments || '-'}</td>
-                  <td>{app.lastModTime || '-'}</td>
-                  <td>{app.state}</td>
+                  <td>{product.version || '-'}</td>
+                  <td>{product.installed || '-'}</td>
+                  <td>{product.stars || '-'}/{product.totalComments || '-'}</td>
+                  <td>{dateFormat(product.lastModTime, 'yyyy-MM-dd') || '-'}</td>
+                  <td>{product.state}</td>
                 </tr>
               )
             })}
@@ -112,16 +127,19 @@ class AppProductsList extends Component {
           </table>
         </div>
         {
-          state.addingApp &&
-          <Modal className="app-add-modal">
+          state.addingProduct &&
+          <Modal className="add-product-modal">
             <div className="close" onClick={this.onCancel}><MdClose/></div>
-            <div className="modal-title">添加应用</div>
+            <div className="modal-title">添加产品</div>
             <div className="modal-content">
               <div className="form">
-                <input type="text" placeholder="应用名称"/>
+                <input type="text" ref="name" placeholder="产品名称"/>
+              </div>
+              <div className="form">
+                <input type="text" ref="description" placeholder="产品描述"/>
               </div>
               <div className="action">
-                <button className="btn btn-default">保存</button>
+                <button className="btn btn-default" onClick={this.onUpdate}>保存</button>
               </div>
             </div>
           </Modal>
@@ -141,4 +159,7 @@ AppProductsList.propTypes = {};
 
 AppProductsList.defaultProps = {};
 
-export default connect(mapStateToProps)(AppProductsList)
+export default connect(mapStateToProps, {
+  push,
+  updateProduct
+})(AppProductsList)

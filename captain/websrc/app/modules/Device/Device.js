@@ -4,7 +4,7 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import Link from 'react-router/lib/Link';
-import {loadDevice} from './actions';
+import {loadProducts} from './actions';
 
 import './Device.less'
 
@@ -16,8 +16,8 @@ class Device extends Component {
 
   componentDidMount() {
     const products = this.props.products;
-    if (!products.loaded && !products.loading) {
-      this.props.loadDevice();
+    if (!products.loading) {
+      this.props.loadProducts();
     }
   }
 
@@ -52,5 +52,5 @@ Device.defaultProps = {
 };
 
 export default connect(mapStateToProps, {
-  loadDevice
+  loadProducts
 })(Device)

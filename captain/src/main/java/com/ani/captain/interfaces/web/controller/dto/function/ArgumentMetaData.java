@@ -7,6 +7,9 @@ public class ArgumentMetaData {
     public ArgumentType type;
     public String name;
 
+    public ArgumentMetaData() {
+    }
+
     public ArgumentMetaData(ArgumentType type, String name) {
         this.type = type;
         this.name = name;

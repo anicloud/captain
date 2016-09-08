@@ -191,7 +191,7 @@ class ApiExplore extends Component {
                     <div className="list-item-name">名称</div>
                     <div className="list-item-description">描述</div>
                   </div>
-                  {state.curApi.inputArguments.map(arg => {
+                  {state.curApi.input.map(arg => {
                     return (
                       <div className="list-item" key={arg.name}>
                         <div className="list-item-type">{arg.type}</div>
@@ -209,7 +209,7 @@ class ApiExplore extends Component {
                     <div className="list-item-name">名称</div>
                     <div className="list-item-description">描述</div>
                   </div>
-                  {state.curApi.outputArguments.map(arg => {
+                  {state.curApi.output.map(arg => {
                     return (
                       <div className="list-item" key={arg.name}>
                         <div className="list-item-type">{arg.type}</div>

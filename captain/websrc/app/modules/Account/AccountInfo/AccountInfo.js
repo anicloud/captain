@@ -3,17 +3,21 @@
  */
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
-import FileInput from '../../../components/FileInput';
-
+import FileInput from 'components/FileInput';
+import {host} from '../../constants';
 import './AccountInfo.less'
 
 class AccountInfo extends Component {
   constructor(props) {
     super(props);
+    this.onLogout = this.onLogout.bind(this);
     this.state = {};
   }
 
   componentDidMount() {
+  }
+
+  onLogout() {
   }
 
   render() {
@@ -36,7 +40,7 @@ class AccountInfo extends Component {
             <div className="form-item row">
               <div className="item-key col-lg-6 col-lg-offset-3">
                 <div className="name">名称</div>
-                <div className="description">开发者名称，将显示在商店的作者栏。长度不超过32个字符。</div>
+                <div className="description">个人名称。</div>
               </div>
               <div className="item-value col-lg-8">
                 <input type="text" defaultValue={props.info.entity.name}/>
@@ -45,15 +49,35 @@ class AccountInfo extends Component {
             <div className="form-item row">
               <div className="item-key col-lg-6 col-lg-offset-3">
                 <div className="name">邮箱</div>
-                <div className="description">开发者注册邮箱，将显示在商店的作者联系栏。长度不超过32个字符。</div>
+                <div className="description">用户注册的邮箱。</div>
               </div>
               <div className="item-value col-lg-8">
                 <input type="text" defaultValue={props.info.entity.email}/>
               </div>
             </div>
+            <div className="form-item row">
+              <div className="item-key col-lg-6 col-lg-offset-3">
+                <div className="name">电话</div>
+                <div className="description">用户注册的电话号码。</div>
+              </div>
+              <div className="item-value col-lg-8">
+                <input type="text" defaultValue={props.info.entity.phoneNumber}/>
+              </div>
+            </div>
+            <div className="form-item row">
+              <div className="item-key col-lg-6 col-lg-offset-3">
+                <div className="name">登出</div>
+                <div className="description">登出当前账号</div>
+              </div>
+              <div className="item-value col-lg-8">
+                <a href={host + '/logout/cas'}>
+                  <button className="btn btn-error">登出账号</button>
+                </a>
+              </div>
+            </div>
           </div>
           <div className="form-action">
-            <button onClick={this.onSave} className="btn btn-default btn-save">保存</button>
+            <button className="btn btn-default btn-save">保存</button>
           </div>
         </div>
       </div>

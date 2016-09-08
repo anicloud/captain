@@ -1,7 +1,7 @@
 package com.ani.captain.interfaces.web.service;
 
-import com.ani.octopus.account.interfaces.AccountServiceFacade;
-import com.ani.octopus.commons.accout.dto.AccountDto;
+import com.ani.earth.commons.dto.AccountDto;
+import com.ani.earth.interfaces.AccountServiceFacade;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

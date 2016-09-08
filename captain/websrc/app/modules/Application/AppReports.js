@@ -4,16 +4,16 @@
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {Line as LineChart} from 'react-chartjs-2';
-import SearchInput from '../../components/SearchInput';
-import Loading from '../../components/Loading';
-import {loadAppReports} from './actions';
+import SearchInput from 'components/SearchInput';
+import Loading from 'components/Loading';
+import {loadProductReports} from './actions';
 import './AppReports.less';
 
 class AppReports extends Component {
   constructor(props) {
     super(props);
     this.onSearchBoxFocused = this.onSearchBoxFocused.bind(this);
-    this.onSelectApp = this.onSelectApp.bind(this);
+    this.onSelectProduct = this.onSelectProduct.bind(this);
     this.state = {
       searchBoxFocused: false,
       curProduct: undefined,
@@ -22,10 +22,15 @@ class AppReports extends Component {
   }
 
   componentDidMount() {
+
+  }
+
+  componentWillReceiveProps(nextProps) {
     if (this.state.curProduct) {
-      let curReports = this.props.reports.entities[this.state.curProduct.appId];
+      let curReports = nextProps.reports.entities[this.state.curProduct.productId];
       if (!curReports) {
-        loadAppReports(this.state.curProduct.appId);
+        nextProps.loadProductReports(this.state.curProduct.productId, 'today');
+        nextProps.loadProductReports(this.state.curProduct.productId, 'week');
       } else {
         this.setState({curReports});
       }
@@ -36,14 +41,15 @@ class AppReports extends Component {
 
   }
 
-  onSelectApp(app) {
-    let curReports = this.props.reports.entities[app.appId];
+  onSelectProduct(product) {
+    let curReports = this.props.reports.entities[product.productId];
     if (!curReports) {
-      loadAppReports(app.appId);
+      this.props.loadProductReports(product.productId, 'today');
+      this.props.loadProductReports(product.productId, 'week');
     } else {
       this.setState({curReports});
     }
-    this.setState({curProduct: app});
+    this.setState({curProduct: product});
   }
 
   render() {
@@ -56,7 +62,7 @@ class AppReports extends Component {
     let productsData = [];
     for (let data of Object.values(props.products.entities)) {
       productsData.push({
-        key: data.appId,
+        key: data.productId,
         ...data
       });
     }
@@ -86,7 +92,7 @@ class AppReports extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
-            data: state.curReports ? state.curReports.week.activeUsers : [],
+            data: state.curReports && state.curReports.week ? state.curReports.week.activeUsers : [],
             spanGaps: false
           }
         ]
@@ -109,7 +115,7 @@ class AppReports extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
-            data: state.curReports ? state.curReports.week.installed : [],
+            data: state.curReports && state.curReports.week ? state.curReports.week.installed : [],
             spanGaps: false
           }
         ]
@@ -132,7 +138,7 @@ class AppReports extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
-            data: state.curReports ? state.curReports.week.launched : [],
+            data: state.curReports && state.curReports.week ? state.curReports.week.launched : [],
             spanGaps: false
           }
         ]
@@ -143,10 +149,10 @@ class AppReports extends Component {
       <div className="reports">
         <div className="tool-bar">
           <div className="search-tool">
-            <SearchInput placeholder="选择应用"
+            <SearchInput placeholder="选择产品"
                          autoComplete={true}
                          dataSource={productsData}
-                         onSelect={this.onSelectApp}
+                         onSelect={this.onSelectProduct}
             />
           </div>
           {state.curProduct &&
@@ -168,8 +174,8 @@ class AppReports extends Component {
             <div className="row">
               <div className="capsule col-lg-6">
                 <div className="number">
-                  {state.curReports ?
-                    state.curReports.today.activeUsers : 0}
+                  {state.curReports && state.curReports.today.activeUsers[0] ?
+                    state.curReports.today.activeUsers[0] : 0}
                 </div>
                 <div className="text">
                   <div className="title">活动用户</div>
@@ -178,8 +184,8 @@ class AppReports extends Component {
               </div>
               <div className="capsule col-lg-offset-2 col-lg-6">
                 <div className="number">
-                  {state.curReports ?
-                    state.curReports.today.installed : 0}
+                  {state.curReports && state.curReports.today.installed[0] ?
+                    state.curReports.today.installed[0] : 0}
                 </div>
                 <div className="text">
                   <div className="title">应用安装</div>
@@ -188,8 +194,8 @@ class AppReports extends Component {
               </div>
               <div className="capsule col-lg-offset-2 col-lg-6">
                 <div className="number">
-                  {state.curReports ?
-                    state.curReports.today.launched : 0}
+                  {state.curReports && state.curReports.today.launched[0] ?
+                    state.curReports.today.launched[0] : 0}
                 </div>
                 <div className="text">
                   <div className="title">应用启动</div>
@@ -218,7 +224,7 @@ class AppReports extends Component {
                       <LineChart data={chartData.activeUsers} options={chartOptions}/>
                     </div>
                     :
-                    <Loading>未选择产品</Loading>
+                    <Loading>无数据</Loading>
                   }
                 </div>
               </div>
@@ -232,7 +238,7 @@ class AppReports extends Component {
                       <LineChart data={chartData.installed} options={chartOptions}/>
                     </div>
                     :
-                    <Loading>未选择产品</Loading>
+                    <Loading>无数据</Loading>
                   }
                 </div>
               </div>
@@ -248,7 +254,7 @@ class AppReports extends Component {
                       <LineChart data={chartData.launched} options={chartOptions}/>
                     </div>
                     :
-                    <Loading>未选择产品</Loading>
+                    <Loading>无数据</Loading>
                   }
                 </div>
               </div>
@@ -267,11 +273,12 @@ function mapStateToProps(state) {
   };
 }
 
-
 AppReports.propTypes = {
 };
 
 AppReports.defaultProps = {
 };
 
-export default connect(mapStateToProps)(AppReports)
+export default connect(mapStateToProps, {
+  loadProductReports
+})(AppReports)

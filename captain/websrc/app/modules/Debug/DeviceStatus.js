@@ -4,11 +4,7 @@
 
 import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
-import Loading from '../../components/Loading';
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight
-} from 'react-icons/lib/md';
+import Loading from 'components/Loading';
 import './DeviceStatus.less'
 
 class DeviceStatus extends Component {
@@ -24,9 +20,10 @@ class DeviceStatus extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.device !== nextProps.device) {
-      this.setState({collapse: false});
-    }
+    this.setState({collapse: false});
+    // if (this.props.device !== nextProps.device) {
+    //   this.setState({collapse: false});
+    // }
   }
 
   onToggleStatus() {

@@ -3,7 +3,10 @@
  */
 
 import * as t from './actions';
-import {random, randomArray} from '../../components/utils';
+import {random, randomArray} from 'components/utils';
+import keyBy from 'lodash.keyby';
+import merge from 'lodash.merge';
+import omit from 'lodash.omit';
 
 const initialState = {
   products: {
@@ -12,65 +15,45 @@ const initialState = {
     message: '',
     entities: {
       '1': {
-        deviceId: '1',
-        name: '空调',
-        version: 1,
-        installedCount: 20,
-        stars: 4,
-        totalComments: 80,
-        lastModTime: '2016-08-01',
-        state: '已发布',
-        logo: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png'
-      },
-      '2': {
-        deviceId: '2',
-        name: '热水器',
-        version: 1,
-        installedCount: 20,
-        stars: 4,
-        totalComments: 80,
-        lastModTime: '2016-08-01',
-        state: '未发布',
-        logo: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png'
-      },
-      '3': {
-        deviceId: '3',
-        name: '台灯',
-        version: 1,
-        installedCount: 20,
-        stars: 4,
-        totalComments: 80,
-        lastModTime: '2016-08-01',
-        state: '未发布',
-        logo: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png'
-      }
-    }
-  },
-  details: {
-    loading: false,
-    entities: {
-      '1': {
-        deviceId: '1',
+        productId: '1',
         name: '空调',
         description: 'xx智能空调',
-        version: 1,
         type: 'smartHome',
+        version: 1,
+        installed: 20,
+        stars: 4,
+        totalComments: 80,
+        lastModTime: '1472188502365',
+        state: '已发布',
+        logo: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png',
         home: 'http://example.com'
       },
       '2': {
-        deviceId: '2',
+        productId: '2',
         name: '热水器',
         description: 'xx智能热水器',
-        version: 1,
         type: 'smartHome',
+        version: 1,
+        installed: 20,
+        stars: 4,
+        totalComments: 80,
+        lastModTime: '1472188502365',
+        state: '未发布',
+        logo: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png',
         home: 'http://example.com'
       },
       '3': {
-        deviceId: '3',
+        productId: '3',
         name: '台灯',
         description: 'xx智能台灯',
-        version: 1,
         type: 'smartHome',
+        version: 1,
+        installed: 20,
+        stars: 4,
+        totalComments: 80,
+        lastModTime: '1472188502365',
+        state: '未发布',
+        logo: 'https://raw.githubusercontent.com/anicloud/anicloud.github.io/master/vi/logo/ani_logo.png',
         home: 'http://example.com'
       }
     }
@@ -79,72 +62,42 @@ const initialState = {
     loading: false,
     entities: {
       '1': {
-        deviceId: '1',
+        productId: '1',
         today: {
           activated: random(3000, 6000),
           installed: random(3000, 5000),
           connected: random(6000, 10000)
         },
-        week: {
+        history: {
           activated: randomArray(3000, 6000, 7),
           installed: randomArray(3000, 5000, 7),
           connected: randomArray(6000, 10000, 7)
-        },
-        month: {
-          activated: [],
-          installed: [],
-          connected: []
-        },
-        year: {
-          activated: [],
-          installed: [],
-          connected: []
         }
       },
       '2': {
-        deviceId: '2',
+        productId: '2',
         today: {
           activated: random(3000, 6000),
           installed: random(3000, 5000),
           connected: random(6000, 10000)
         },
-        week: {
+        history: {
           activated: randomArray(3000, 6000, 7),
           installed: randomArray(3000, 5000, 7),
           connected: randomArray(6000, 10000, 7)
-        },
-        month: {
-          activated: [],
-          installed: [],
-          connected: []
-        },
-        year: {
-          activated: [],
-          installed: [],
-          connected: []
         }
       },
       '3': {
-        deviceId: '3',
+        productId: '3',
         today: {
           activated: random(3000, 6000),
           installed: random(3000, 5000),
           connected: random(6000, 10000)
         },
-        week: {
+        history: {
           activated: randomArray(3000, 6000, 7),
           installed: randomArray(3000, 5000, 7),
           connected: randomArray(6000, 10000, 7)
-        },
-        month: {
-          activated: [],
-          installed: [],
-          connected: []
-        },
-        year: {
-          activated: [],
-          installed: [],
-          connected: []
         }
       }
     }
@@ -152,79 +105,127 @@ const initialState = {
 };
 
 function products(state, action) {
-  let nextState = Object.assign({}, state);
   switch (action.type) {
-    case t.LOAD_DEVICE:
+    case t.FETCH_PRODUCTS:
     {
-      nextState.loading = true;
-      break;
+      return Object.assign({}, state, {
+        loading: true,
+        entities: {},
+        message: undefined
+      });
     }
-    case t.LOAD_DEVICE_SUCCESS:
+    case t.FETCH_PRODUCTS_SUCCESS:
     {
-      nextState.loading = false;
-      nextState.loaded = true;
-      break;
+      return Object.assign({}, {
+        loading: false,
+        entities: keyBy(action.data, 'productId'),
+        message: undefined
+      });
     }
-    case t.LOAD_DEVICE_FAIL:
+    case t.FETCH_PRODUCTS_FAIL:
     {
-      nextState.loading = true;
-      break;
+      return Object.assign({}, state, {
+        loading: false,
+        message: action.message
+      });
+    }
+    case t.SAVE_PRODUCT:
+    {
+      return Object.assign({}, state, {
+        loading: true,
+        message: undefined
+      });
+    }
+    case t.SAVE_PRODUCT_SUCCESS:
+    {
+      let entities = merge({}, state.entities, keyBy([action.data], 'productId'));
+      return Object.assign({}, {
+        loading: false,
+        entities: entities,
+        message: undefined
+      });
+    }
+    case t.SAVE_PRODUCT_FAIL:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        message: action.message
+      });
+    }
+    case t.DELETE_PRODUCT:
+    {
+      return Object.assign({}, state, {
+        loading: true,
+        message: undefined
+      });
+    }
+    case t.DELETE_PRODUCT_SUCCESS:
+    {
+      return Object.assign({}, {
+        loading: false,
+        entities: omit(state.entities, [action.data]),
+        message: undefined
+      });
+    }
+    case t.DELETE_PRODUCT_FAIL:
+    {
+      return Object.assign({}, state, {
+        loading: false,
+        message: action.message
+      });
     }
     default:
+      return state;
   }
-  return nextState;
-}
-
-function details(state, action) {
-  let nextState = Object.assign({}, state);
-  switch (action.type) {
-    case t.LOAD_DEVICE_DETAILS:
-    {
-      nextState.loading = true;
-      break;
-    }
-    case t.LOAD_DEVICE_DETAILS_SUCCESS:
-    {
-      nextState.loading = false;
-      break;
-    }
-    case t.LOAD_DEVICE_DETAILS_FAIL:
-    {
-      nextState.loading = false;
-      break;
-    }
-    default:
-  }
-  return nextState;
 }
 
 function reports(state, action) {
-  let nextState = Object.assign({}, state);
   switch (action.type) {
-    case t.LOAD_DEVICE_REPORTS:
+    case t.FETCH_PRODUCT_REPORTS:
     {
-      nextState.loading = true;
-      break;
+      return Object.assign({}, state, {
+        loading: true,
+        message: undefined
+      });
     }
-    case t.LOAD_DEVICE_REPORTS_SUCCESS:
+    case t.FETCH_PRODUCT_REPORTS_SUCCESS:
     {
-      nextState.loading = false;
-      break;
+      const data = action.data;
+      let entities = merge({}, state.entities, {[data.productId]: {
+        [data.period]: data
+      }});
+      return Object.assign({}, {
+        loading: false,
+        entities: entities,
+        message: undefined
+      });
     }
-    case t.LOAD_DEVICE_REPORTS_FAIL:
+    case t.FETCH_PRODUCT_REPORTS_FAIL:
     {
-      nextState.loading = false;
-      break;
+      return Object.assign({}, state, {
+        loading: false,
+        message: action.message
+      });
     }
     default:
+      return state;
   }
-  return nextState;
 }
 
-export default function (state = initialState, action = {}) {
+export default function (state = {
+  products: {
+    loaded: true,
+    loading: false,
+    message: '',
+    entities: {}
+  },
+  reports: {
+    loading: false,
+    entities: {}
+  }
+}, action = {}) {
   return Object.assign({}, {
     products: products(state.products, action),
-    details: details(state.details, action),
     reports: reports(state.reports, action)
   });
 }

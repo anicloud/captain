@@ -1,33 +1,67 @@
 package com.ani.captain.domain.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by huangbin on 8/24/16.
  */
-public class AccountDevice {
-    private Long accountId;
+@Entity
+@Table(name = "AccountDevice")
+public class AccountDevice implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
+
+    @Column(name= "accountId", nullable = false, unique = true)
+    private long accountId;
+
+    @Column(name = "vendor", nullable = false, unique = true)
     private String vendor;
+
+    @Column(name = "intro")
+    private String intro;
+
+    @Column(name = "logo")
     private String logo;
+
+    @Column(name = "home")
     private String home;
+
+    @Column(name = "creditCard")
     private String creditCard;
-    private Byte[] token;
+
+    @Column(name = "token")
+    private byte[] token;
 
     public AccountDevice() {
     }
 
-    public AccountDevice(Long accountId, String vendor, String logo, String home, String creditCard, Byte[] token) {
+    public AccountDevice(long accountId, String vendor, String intro, String logo, String home, String creditCard, byte[] token) {
         this.accountId = accountId;
         this.vendor = vendor;
+        this.intro = intro;
         this.logo = logo;
         this.home = home;
         this.creditCard = creditCard;
         this.token = token;
     }
 
-    public Long getAccountId() {
+    public AccountDevice(String vendor, String intro, String logo, String home, String creditCard, byte[] token) {
+        this.vendor = vendor;
+        this.intro = intro;
+        this.logo = logo;
+        this.home = home;
+        this.creditCard = creditCard;
+        this.token = token;
+    }
+
+    public long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setAccountId(long accountId) {
         this.accountId = accountId;
     }
 
@@ -37,6 +71,14 @@ public class AccountDevice {
 
     public void setVendor(String vendor) {
         this.vendor = vendor;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
     }
 
     public String getLogo() {
@@ -63,11 +105,11 @@ public class AccountDevice {
         this.creditCard = creditCard;
     }
 
-    public Byte[] getToken() {
+    public byte[] getToken() {
         return token;
     }
 
-    public void setToken(Byte[] token) {
+    public void setToken(byte[] token) {
         this.token = token;
     }
 }

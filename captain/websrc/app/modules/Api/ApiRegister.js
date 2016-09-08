@@ -47,10 +47,6 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {};
-}
-
 ApiRegister.propTypes = {};
 
 ApiRegister.defaultProps = {};

@@ -2,7 +2,7 @@
  * Created by huangbin on 6/25/16.
  */
 import React, {PropTypes, Component} from 'react';
-import {Tabs, Tab} from '../../components/Tabs';
+import {Tabs, Tab} from 'components/Tabs';
 import DebugPanel from './DebugPanel';
 import './DebugTools.less';
 

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by huangbin on 12/14/15.
  */
 public class FunctionMetaData {
-    public Integer functionId;
+    public int functionId;
     public String name;
     public FunctionGroupData group;
     public List<ArgumentMetaData> input;
@@ -17,7 +17,7 @@ public class FunctionMetaData {
     public FunctionMetaData() {
     }
 
-    public FunctionMetaData(Integer functionId, String name, FunctionGroupData group,
+    public FunctionMetaData(int functionId, String name, FunctionGroupData group,
                             List<ArgumentMetaData> input, List<ArgumentMetaData> output,
                             FunctionConnType connType, FunctionAccessType accessType) {
         this.functionId = functionId;

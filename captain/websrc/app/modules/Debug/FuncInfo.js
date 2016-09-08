@@ -2,8 +2,8 @@
  * Created by huangbin on 8/16/16.
  */
 import React, {PropTypes, Component} from 'react';
-import {Menu, MenuItem} from '../../components/Menu';
-import {noop} from '../../components/utils'; 
+import {Menu, MenuItem} from 'components/Menu';
+import {noop} from 'components/utils'; 
 import './FuncInfo.less';
 
 class FuncInfo extends Component {
@@ -76,11 +76,11 @@ class FuncInfo extends Component {
                       </li>
                       <li>
                         <div className="key">功能组：</div>
-                        <div className="value">{state.curFunc.groupName}</div>
+                        <div className="value">{state.curFunc.group.name}</div>
                       </li>
                       <li>
                         <div className="key">功能组ID：</div>
-                        <div className="value">{state.curFunc.groupId}</div>
+                        <div className="value">{state.curFunc.group.groupId}</div>
                       </li>
                       <li>
                         <div className="key">描述：</div>
@@ -89,9 +89,9 @@ class FuncInfo extends Component {
                       <li>
                         <div className="key">输入参数：</div>
                         <div className="value">
-                          {!state.curFunc.inputArguments || state.curFunc.inputArguments.length == 0 ? '无' :
+                          {!state.curFunc.input || state.curFunc.input.length == 0 ? '无' :
                             <table>
-                              {state.curFunc.inputArguments.map(arg => {
+                              {state.curFunc.input.map(arg => {
                                 return (
                                   <tr>
                                     <td>arg.name</td>
@@ -105,9 +105,9 @@ class FuncInfo extends Component {
                       <li>
                         <div className="key">输出参数：</div>
                         <div className="value">
-                          {!state.curFunc.outputArguments || state.curFunc.outputArguments.length == 0 ? '无' :
+                          {!state.curFunc.output || state.curFunc.output.length == 0 ? '无' :
                             <table>
-                              {state.curFunc.outputArguments.map(arg => {
+                              {state.curFunc.output.map(arg => {
                                 return (
                                   <tr>
                                     <td>arg.name</td>

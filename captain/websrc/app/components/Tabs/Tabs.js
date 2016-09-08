@@ -3,11 +3,9 @@
  */
 import React, {Component, PropTypes} from 'react';
 import classNames from 'classnames';
-
-import {noop} from '../utils'
-import TabNav from './TabNav'
-
-import {MdClose} from 'react-icons/lib/md'
+import {noop} from '../utils';
+import TabNav from './TabNav';
+import MdClose from 'react-icons/lib/md/close';
 
 class Tabs extends Component {
   constructor(props) {

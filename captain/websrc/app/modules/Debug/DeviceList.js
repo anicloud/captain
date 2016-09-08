@@ -5,17 +5,13 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import classNames from 'classnames';
-import {noop} from '../../components/utils';
-import Loading from '../../components/Loading';
-import {Menu, SubMenu, MenuItem} from '../../components/Menu';
-import {
-  MdKeyboardArrowLeft,
-  MdKeyboardArrowRight,
-  MdKeyboardArrowDown,
-  MdViewList
-} from 'react-icons/lib/md'
-
-import './DeviceList.less'
+import {noop} from 'components/utils';
+import Loading from 'components/Loading';
+import {Menu, SubMenu, MenuItem} from 'components/Menu';
+import MdKeyboardArrowRight from 'react-icons/lib/md/keyboard-arrow-right';
+import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down';
+import MdDeviceHub from 'react-icons/lib/md/device-hub';
+import './DeviceList.less';
 
 class DeviceList extends Component {
   constructor(props) {
@@ -47,13 +43,13 @@ class DeviceList extends Component {
     const openKeys = this.state.openKeys;
     return (
       <div>
-        <div className="icon icon-left"><MdViewList></MdViewList></div>
+        <div className="icon icon-left"><MdDeviceHub/></div>
         <div className="text">{device.name}</div>
         <div className="icon icon-right">
           { openKeys.includes(device.deviceId) ?
-            <MdKeyboardArrowDown></MdKeyboardArrowDown>
+            <MdKeyboardArrowDown/>
             :
-            <MdKeyboardArrowRight></MdKeyboardArrowRight>
+            <MdKeyboardArrowRight/>
           }
         </div>
       </div>

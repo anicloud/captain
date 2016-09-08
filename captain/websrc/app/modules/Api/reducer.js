@@ -1,8 +1,9 @@
 /**
  * Created by huangbin on 8/15/16.
  */
-import * as _ from 'lodash';
 import * as t from './actions';
+import keyBy from 'lodash.keyby';
+import merge from 'lodash.merge';
 
 const initialState = {
   groups: {
@@ -52,8 +53,8 @@ const initialState = {
         name: 'powerOn',
         description: '打开设备',
         returnType: 'void',
-        inputArguments: [],
-        outputArguments: []
+        input: [],
+        output: []
       },
       '2': {
         functionId: '2',
@@ -61,8 +62,8 @@ const initialState = {
         name: 'powerOff',
         description: '关闭设备',
         returnType: 'void',
-        inputArguments: [],
-        outputArguments: []
+        input: [],
+        output: []
       },
       '3': {
         functionId: '3',
@@ -70,8 +71,8 @@ const initialState = {
         name: 'getTemperature',
         description: '获取温度',
         returnType: 'void',
-        inputArguments: [],
-        outputArguments: [
+        input: [],
+        output: [
           {name: 'temperature', type: 'integer'}
         ]
       },
@@ -81,10 +82,10 @@ const initialState = {
         name: 'setTemperature',
         description: '设置温度',
         returnType: 'void',
-        inputArguments: [
+        input: [
           {name: 'temperature', type: 'integer'}
         ],
-        outputArguments: []
+        output: []
       },
       '5': {
         functionId: '5',
@@ -92,8 +93,8 @@ const initialState = {
         name: 'getHumidity',
         description: '获取湿度',
         returnType: 'void',
-        inputArguments: [],
-        outputArguments: [
+        input: [],
+        output: [
           {name: 'humidity', type: 'integer'}
         ]
       },
@@ -103,10 +104,10 @@ const initialState = {
         name: 'setHumidity',
         description: '设置湿度',
         returnType: 'void',
-        inputArguments: [
+        input: [
           {name: 'temperature', type: 'integer'}
         ],
-        outputArguments: []
+        output: []
       },
       '7': {
         functionId: '7',
@@ -114,8 +115,8 @@ const initialState = {
         name: 'getLux',
         description: '获取照明度',
         returnType: 'void',
-        inputArguments: [],
-        outputArguments: [
+        input: [],
+        output: [
           {name: 'lux', type: 'integer'}
         ]
       },
@@ -125,10 +126,10 @@ const initialState = {
         name: 'setLux',
         description: '设置照明度',
         returnType: 'void',
-        inputArguments: [
+        input: [
           {name: 'lux', type: 'integer'}
         ],
-        outputArguments: []
+        output: []
       }
     }
   }
@@ -136,28 +137,28 @@ const initialState = {
 
 function groups(state, action) {
   switch (action.type) {
-    case t.REQUEST_API_GROUPS:
+    case t.FETCH_API_GROUPS:
     {
-      return _.assign({}, state, {
+      return Object.assign({}, state, {
         loading: true,
         loaded: false,
         entities: {},
         message: ''
       });
     }
-    case t.REQUEST_API_GROUPS_SUCCESS:
+    case t.FETCH_API_GROUPS_SUCCESS:
     {
-      return _.assign({}, state, {
-        loading: true,
-        loaded: false,
-        entities: _.keyBy(action.data, 'deviceId'),
+      return Object.assign({}, state, {
+        loading: false,
+        loaded: true,
+        entities: keyBy(action.data, 'deviceId'),
         message: ''
       });
     }
-    case t.REQUEST_API_GROUPS_FAIL:
+    case t.FETCH_API_GROUPS_FAIL:
     {
-      return _.assign({}, state, {
-        loading: true,
+      return Object.assign({}, state, {
+        loading: false,
         loaded: false,
         message: action.message,
         entities: {}
@@ -168,26 +169,26 @@ function groups(state, action) {
   }
 }
 
-function apiDetails(state, action) {
+function apis(state, action) {
   switch (action.type) {
-    case t.REQUEST_API_DETAILS:
+    case t.FETCH_API_DETAILS:
     {
-      return _.merge({}, state, {
+      return Object.assign({}, state, {
         loading: true,
         message: ''
       })
     }
-    case t.REQUEST_API_DETAILS_SUCCESS:
+    case t.FETCH_API_DETAILS_SUCCESS:
     {
-      return _.merge({}, state, {
+      return merge({}, state, {
         loading: false,
         message: '',
-        entities: _.keyBy(action.data, 'functionId')
+        entities: keyBy(action.data, 'functionId')
       });
     }
-    case t.REQUEST_API_DETAILS_FAIL:
+    case t.FETCH_API_DETAILS_FAIL:
     {
-      return _.merge({}, state, {
+      return Object.assign({}, state, {
         loading: false,
         message: action.message
       })
@@ -200,6 +201,6 @@ function apiDetails(state, action) {
 export default function (state = initialState, action = {}) {
   return Object.assign({}, {
     groups: groups(state.groups, action),
-    functions: apiDetails(state.functions, action)
+    functions: apis(state.functions, action)
   });
 }

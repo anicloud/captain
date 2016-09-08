@@ -25,8 +25,8 @@
                          clientID="${octopus.jms.clientId}"/>
 
   <!--<bean id="antennaPooledConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory">-->
-    <!--<property name="connectionFactory" ref="antennaTargetConnectionFactory"/>-->
-    <!--<property name="maxConnections" value="10"/>-->
+  <!--<property name="connectionFactory" ref="antennaTargetConnectionFactory"/>-->
+  <!--<property name="maxConnections" value="10"/>-->
   <!--</bean>-->
 
   <bean id="antennaConnectionFactory"
@@ -69,31 +69,36 @@
     <property name="connectionFactory"
               ref="antennaConnectionFactory"/>
     <property name="queueName" value="${octopus.jms.queue}.AccountServiceFacade"/>
-    <property name="serviceInterface" value="com.ani.octopus.account.interfaces.AccountServiceFacade"/>
+    <property name="serviceInterface" value="com.ani.earth.interfaces.AccountServiceFacade"/>
   </bean>
 
   <bean id="accountGroupServiceFacade" class="org.springframework.jms.remoting.JmsInvokerProxyFactoryBean">
     <property name="connectionFactory"
               ref="antennaConnectionFactory"/>
     <property name="queueName" value="${octopus.jms.queue}.AccountGroupServiceFacade"/>
-    <property name="serviceInterface" value="com.ani.octopus.account.interfaces.AccountGroupServiceFacade"/>
+    <property name="serviceInterface" value="com.ani.earth.interfaces.AccountGroupServiceFacade"/>
   </bean>
 
+  <bean id="aniSMSFacade" class="org.springframework.jms.remoting.JmsInvokerProxyFactoryBean">
+    <property name="connectionFactory" ref="antennaConnectionFactory"/>
+    <property name="queueName" value="${octopus.jms.queue}.AniSMSFacade"/>
+    <property name="serviceInterface" value="com.ani.earth.interfaces.smsNotification.AniSMSFacade"/>
+  </bean>
   <!-- ObjectMessageListener-->
   <!--<jms:listener-container connection-factory="antennaConnectionFactory" destination-type="durableTopic">-->
-    <!--<jms:listener destination="${octopus.jms.queue}.message"-->
-                  <!--ref="objectMessageListener"-->
-                  <!--method="onNotifyMessage"/>-->
+  <!--<jms:listener destination="${octopus.jms.queue}.message"-->
+  <!--ref="objectMessageListener"-->
+  <!--method="onNotifyMessage"/>-->
   <!--</jms:listener-container>-->
 
   <!-- rmi-->
   <!-- ObjectInvokeListener-->
   <!--<bean class="org.springframework.remoting.rmi.RmiServiceExporter">-->
-    <!--<property name="serviceName" value="ObjectInvokeListener"/>-->
-    <!--<property name="service" ref="objectInvokeListener"/>-->
-    <!--<property name="serviceInterface" value="com.ani.octopus.antenna.infrastructure.service.ObjectInvokeListener"/>-->
-    <!--<property name="replaceExistingBinding" value="true"/>-->
-    <!--&lt;!&ndash;<property name="registryHost" value="${rmi.host}"/>&ndash;&gt;-->
-    <!--<property name="registryPort" value="${octopus.rmi.invoke.port}"/>-->
+  <!--<property name="serviceName" value="ObjectInvokeListener"/>-->
+  <!--<property name="service" ref="objectInvokeListener"/>-->
+  <!--<property name="serviceInterface" value="com.ani.octopus.antenna.infrastructure.service.ObjectInvokeListener"/>-->
+  <!--<property name="replaceExistingBinding" value="true"/>-->
+  <!--&lt;!&ndash;<property name="registryHost" value="${rmi.host}"/>&ndash;&gt;-->
+  <!--<property name="registryPort" value="${octopus.rmi.invoke.port}"/>-->
   <!--</bean>-->
 </beans>

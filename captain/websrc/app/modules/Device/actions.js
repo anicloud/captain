@@ -1,160 +1,174 @@
 /**
  * Created by huangbin on 8/9/16.
  */
-import {host} from '../constants';
+import {host, requestOptions} from '../constants';
 import request from 'reqwest';
 
-export const LOAD_DEVICE = 'device/LOAD_DEVICE';
-export const LOAD_DEVICE_SUCCESS = 'device/LOAD_DEVICE_SUCCESS';
-export const LOAD_DEVICE_FAIL = 'device/LOAD_DEVICE_FAIL';
+export const FETCH_PRODUCTS = 'device/FETCH_PRODUCTS';
+export const FETCH_PRODUCTS_SUCCESS = 'device/FETCH_PRODUCTS_SUCCESS';
+export const FETCH_PRODUCTS_FAIL = 'device/FETCH_PRODUCTS_FAIL';
 
-export const LOAD_DEVICE_DETAILS = 'device/LOAD_DEVICE_DETAILS';
-export const LOAD_DEVICE_DETAILS_SUCCESS = 'device/LOAD_DEVICE_DETAILS_SUCCESS';
-export const LOAD_DEVICE_DETAILS_FAIL = 'device/LOAD_DEVICE_DETAILS_FAIL';
+export const FETCH_PRODUCT_REPORTS = 'device/FETCH_PRODUCT_REPORTS';
+export const FETCH_PRODUCT_REPORTS_SUCCESS = 'device/FETCH_PRODUCT_REPORTS_SUCCESS';
+export const FETCH_PRODUCT_REPORTS_FAIL = 'device/FETCH_PRODUCT_REPORTS_FAIL';
 
-export const LOAD_DEVICE_REPORTS = 'device/LOAD_DEVICE_REPORTS';
-export const LOAD_DEVICE_REPORTS_SUCCESS = 'device/LOAD_DEVICE_REPORTS_SUCCESS';
-export const LOAD_DEVICE_REPORTS_FAIL = 'device/LOAD_DEVICE_REPORTS_FAIL';
+export const DELETE_PRODUCT = 'device/DELETE_PRODUCT';
+export const DELETE_PRODUCT_SUCCESS = 'device/DELETE_PRODUCT_SUCCESS';
+export const DELETE_PRODUCT_FAIL = 'device/DELETE_PRODUCT_FAIL';
 
-export const CREATE_DEVICE = 'device/CREATE_DEVICE';
-export const CREATE_DEVICE_SUCCESS = 'device/CREATE_DEVICE_SUCCESS';
-export const CREATE_DEVICE_FAIL = 'device/CREATE_DEVICE_FAIL';
+export const SAVE_PRODUCT = 'device/SAVE_PRODUCT';
+export const SAVE_PRODUCT_SUCCESS = 'device/SAVE_PRODUCT_SUCCESS';
+export const SAVE_PRODUCT_FAIL = 'device/SAVE_PRODUCT_FAIL';
 
-export const DELETE_DEVICE = 'device/DELETE_DEVICE';
-export const DELETE_DEVICE_SUCCESS = 'device/DELETE_DEVICE_SUCCESS';
-export const DELETE_DEVICE_FAIL = 'device/DELETE_DEVICE_FAIL';
-
-export const UPDATE_DEVICE = 'device/UPDATE_DEVICE';
-export const UPDATE_DEVICE_SUCCESS = 'device/UPDATE_DEVICE_SUCCESS';
-export const UPDATE_DEVICE_FAIL = 'device/UPDATE_DEVICE_FAIL';
-
-export const PUBLISH_DEVICE = 'device/PUBLISH_DEVICE';
-export const PUBLISH_DEVICE_SUCCESS = 'device/PUBLISH_DEVICE_SUCCESS';
-export const PUBLISH_DEVICE_FAIL = 'device/PUBLISH_DEVICE_FAIL';
-
-export function loadDevice() {
+export function loadProducts() {
   return (dispatch, getState) => {
     const products = getState().device.products;
-    if ((!products.loaded && !products.loading)) {
-      dispatch(requestDevice());
+    if (!products.loading) {
+      dispatch(fetchProducts());
       return request({
         url: `${host}/service/product/device/list`,
-        method: 'get'
+        method: 'get',
+        ...requestOptions
       }).then(
-        (json) => requestDeviceSuccess(json),
-        (err, msg) => requestDeviceFail(msg)
+        (json) => dispatch(fetchProductsSuccess(json)),
+        (err, msg) => dispatch(fetchProductsFail(msg))
       );
     }
   }
 }
 
-function requestDevice() {
+function fetchProducts() {
   return {
-    type: LOAD_DEVICE
+    type: FETCH_PRODUCTS
   }
 }
 
-function requestDeviceSuccess(json) {
+function fetchProductsSuccess(json) {
   return {
-    type: LOAD_DEVICE_SUCCESS,
+    type: FETCH_PRODUCTS_SUCCESS,
     data: json
   }
 }
 
-function requestDeviceFail(msg) {
+function fetchProductsFail(msg) {
   return {
-    type: LOAD_DEVICE_FAIL,
+    type: FETCH_PRODUCTS_FAIL,
     message: msg
   }
 }
 
-export function loadDeviceDetails(deviceId) {
+export function updateProduct(productData) {
   return (dispatch, getState) => {
-    const details = getState().device.details;
-    if (!details.loading && !details.entities.hasOwnProperty(deviceId)) {
-      dispatch(requestDeviceDetails());
-      const [masterId, slaveId] = deviceId.split('_', 2);
-      return request({
-        url: `${host}/service/product/device/details/${masterId}/${slaveId}`,
-        method: 'get'
-      }).then(
-        (json) => requestDeviceDetailsSuccess(json),
-        (err, msg) => requestDeviceDetailsFail(msg)
+    const products = getState().device.products;
+    if (!products.loading) {
+      dispatch(saveProduct());
+      const options = {
+        url: `${host}/service/product/device`,
+        method: 'post',
+        contentType: 'application/json',
+        data: JSON.stringify(productData),
+        ...requestOptions
+      };
+      return request(options).then(
+        (json) => dispatch(saveProductSuccess(json)),
+        (err, msg) => dispatch(saveProductFail(msg))
       );
     }
   }
 }
 
-function requestDeviceDetails() {
+function saveProduct() {
   return {
-    type: LOAD_DEVICE_DETAILS
+    type: SAVE_PRODUCT
   }
 }
 
-function requestDeviceDetailsSuccess(json) {
+function saveProductSuccess(json) {
   return {
-    type: LOAD_DEVICE_DETAILS_SUCCESS,
+    type: SAVE_PRODUCT_SUCCESS,
     data: json
   }
 }
 
-function requestDeviceDetailsFail(msg) {
+function saveProductFail(msg) {
   return {
-    type: LOAD_DEVICE_DETAILS_FAIL,
+    type: SAVE_PRODUCT_FAIL,
     message: msg
   }
 }
 
 
-export function loadDeviceReports(deviceId) {
+export function destroyProduct(productId) {
   return (dispatch, getState) => {
-    const details = getState().device.details;
-    if (!details.loading && !details.entities.hasOwnProperty(deviceId)) {
-      dispatch(requestDeviceReports());
-      const [masterId, slaveId] = deviceId.split('_', 2);
-      return request({
-        url: `${host}/service/product/device/reports/${masterId}/${slaveId}`,
-        method: 'get'
-      }).then(
-        (json) => requestDeviceReportsSuccess(json),
-        (err, msg) => requestDeviceReportsFail(msg)
+    const products = getState().device.products;
+    if (!products.loading) {
+      dispatch(deleteProduct());
+      const options = {
+        url: `${host}/service/product/device`,
+        method: 'delete',
+        contentType: 'application/json',
+        data: JSON.stringify(productId),
+        ...requestOptions
+      };
+      return request(options).then(
+        () => dispatch(deleteProductSuccess(productId)),
+        (err, msg) => dispatch(deleteProductFail(msg))
       );
     }
   }
 }
 
-function requestDeviceReports() {
+function deleteProduct() {
   return {
-    type: LOAD_DEVICE_REPORTS
+    type: DELETE_PRODUCT
   }
 }
 
-function requestDeviceReportsSuccess(json) {
+function deleteProductSuccess(productId) {
   return {
-    type: LOAD_DEVICE_REPORTS_SUCCESS,
-    data: json
+    type: DELETE_PRODUCT_SUCCESS,
+    data: productId
   }
 }
 
-function requestDeviceReportsFail(msg) {
+function deleteProductFail(msg) {
   return {
-    type: LOAD_DEVICE_REPORTS_FAIL,
+    type: DELETE_PRODUCT_FAIL,
     message: msg
   }
 }
 
-export function createDevice(device) {
-
+export function loadProductReports(productId, period) {
+  return (dispatch, getState) => {
+    dispatch(fetchProductReports());
+    return request({
+      url: `${host}/service/product/device/reports/${productId}`,
+      method: 'get',
+      data: {period: period},
+      ...requestOptions
+    }).then(
+      (json) => dispatch(fetchProductReportsSuccess(json)),
+      (err, msg) => dispatch(fetchProductReportsFail(msg))
+    );
+  }
 }
 
-export function deleteDevice(deviceId) {
-
+function fetchProductReports() {
+  return {
+    type: FETCH_PRODUCT_REPORTS
+  }
 }
 
-export function updateDevice(device) {
-
+function fetchProductReportsSuccess(json) {
+  return {
+    type: FETCH_PRODUCT_REPORTS_SUCCESS,
+    data: json
+  }
 }
 
-export function publishDevice(deviceId) {
-
+function fetchProductReportsFail(msg) {
+  return {
+    type: FETCH_PRODUCT_REPORTS_FAIL,
+    message: msg
+  }
 }

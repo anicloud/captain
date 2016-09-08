@@ -19,7 +19,6 @@ class Dashboard extends Component {
   render() {
     const state = this.state;
     const props = this.props;
-     
     return (
       <div className="dashboard">
         <div className="entry">
@@ -32,12 +31,7 @@ class Dashboard extends Component {
 
 function mapStateToProps(state) {
   return {
-    ...state
   };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {};
 }
 
 Dashboard.propTypes = {

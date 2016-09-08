@@ -1,5 +1,6 @@
 package com.ani.captain.interfaces.web.service;
 
+import org.apache.log4j.Logger;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.util.regex.Pattern;
  * Created by huangbin on 7/19/16.
  */
 public class CsrfRequestMatcher implements RequestMatcher {
+    private static Logger logger = Logger.getLogger(CsrfRequestMatcher.class);
     private Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
     private List<String> excludedUrls;
 
@@ -20,6 +22,7 @@ public class CsrfRequestMatcher implements RequestMatcher {
             String servletPath = request.getServletPath();
             for (String url : this.excludedUrls) {
                 if (servletPath.contains(url)) {
+//                    logger.info(servletPath);
                     return false;
                 }
             }

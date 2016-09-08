@@ -1,26 +1,66 @@
 package com.ani.captain.domain.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * Created by huangbin on 8/24/16.
  */
-public class ProductApp {
-    private Long productId;
+@Entity
+@Table(name = "ProductApp")
+public class ProductApp implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
+
+    @Column(name = "accountId", nullable = false)
+    private long accountId;
+
+    @Column(name = "productId", nullable = false, unique = true)
+    private long productId;
+
+    @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "type")
     private String type;
-    private Integer version;
-    private Long installed;
-    private Integer stars;
-    private Integer totalComments;
-    private Long lastModTime;
+
+    @Column(name = "version", nullable = false)
+    private int version;
+
+    @Column(name = "installed")
+    private int installed;
+
+    @Column(name = "stars")
+    private int stars;
+
+    @Column(name = "totalComments")
+    private int totalComments;
+
+    @Column(name = "lastModTime")
+    private long lastModTime;
+
+    @Column(name = "state", nullable = false)
     private ProductState state;
+
+    @Column(name = "logo")
     private String logo;
-    private Byte[] token;
+
+    @Column(name = "home")
+    private String home;
+
+    @Column(name = "token")
+    private byte[] token;
 
     public ProductApp() {
     }
 
-    public ProductApp(Long productId, String name, String description, String type, Integer version, Long installed, Integer stars, Integer totalComments, Long lastModTime, ProductState state, String logo, Byte[] token) {
+    public ProductApp(long accountId, long productId, String name, String description, String type, int version, int installed, int stars, int totalComments, long lastModTime, ProductState state, String logo, String home, byte[] token) {
+        this.accountId = accountId;
         this.productId = productId;
         this.name = name;
         this.description = description;
@@ -32,14 +72,23 @@ public class ProductApp {
         this.lastModTime = lastModTime;
         this.state = state;
         this.logo = logo;
+        this.home = home;
         this.token = token;
     }
 
-    public Long getProductId() {
+    public long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
+    }
+
+    public long getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(long productId) {
         this.productId = productId;
     }
 
@@ -67,43 +116,43 @@ public class ProductApp {
         this.type = type;
     }
 
-    public Integer getVersion() {
+    public int getVersion() {
         return version;
     }
 
-    public void setVersion(Integer version) {
+    public void setVersion(int version) {
         this.version = version;
     }
 
-    public Long getInstalled() {
+    public int getInstalled() {
         return installed;
     }
 
-    public void setInstalled(Long installed) {
+    public void setInstalled(int installed) {
         this.installed = installed;
     }
 
-    public Integer getStars() {
+    public int getStars() {
         return stars;
     }
 
-    public void setStars(Integer stars) {
+    public void setStars(int stars) {
         this.stars = stars;
     }
 
-    public Integer getTotalComments() {
+    public int getTotalComments() {
         return totalComments;
     }
 
-    public void setTotalComments(Integer totalComments) {
+    public void setTotalComments(int totalComments) {
         this.totalComments = totalComments;
     }
 
-    public Long getLastModTime() {
+    public long getLastModTime() {
         return lastModTime;
     }
 
-    public void setLastModTime(Long lastModTime) {
+    public void setLastModTime(long lastModTime) {
         this.lastModTime = lastModTime;
     }
 
@@ -123,11 +172,19 @@ public class ProductApp {
         this.logo = logo;
     }
 
-    public Byte[] getToken() {
+    public byte[] getToken() {
         return token;
     }
 
-    public void setToken(Byte[] token) {
+    public void setToken(byte[] token) {
         this.token = token;
+    }
+
+    public String getHome() {
+        return home;
+    }
+
+    public void setHome(String home) {
+        this.home = home;
     }
 }

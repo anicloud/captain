@@ -1,19 +1,18 @@
 /**
  * Created by huangbin on 6/25/16.
  */
-
 import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {Line as LineChart} from 'react-chartjs-2';
-import SearchInput from '../../components/SearchInput';
-import Loading from '../../components/Loading';
-import {loadDeviceReports} from './actions';
+import SearchInput from 'components/SearchInput';
+import Loading from 'components/Loading';
+import {loadProductReports} from './actions';
 
 class DeviceReports extends Component {
   constructor(props) {
     super(props);
     this.onSearchBoxFocused = this.onSearchBoxFocused.bind(this);
-    this.onSelectDevice = this.onSelectDevice.bind(this);
+    this.onSelectProduct = this.onSelectProduct.bind(this);
     this.state = {
       searchBoxFocused: false,
       curProduct: undefined,
@@ -22,10 +21,15 @@ class DeviceReports extends Component {
   }
 
   componentDidMount() {
+
+  }
+
+  componentWillReceiveProps(nextProps) {
     if (this.state.curProduct) {
-      let curReports = this.props.reports.entities[this.state.curProduct.deviceId];
+      let curReports = nextProps.reports.entities[this.state.curProduct.productId];
       if (!curReports) {
-        loadDeviceReports(this.state.curProduct.deviceId);
+        nextProps.loadProductReports(this.state.curProduct.productId, 'today');
+        nextProps.loadProductReports(this.state.curProduct.productId, 'week');
       } else {
         this.setState({curReports});
       }
@@ -36,14 +40,15 @@ class DeviceReports extends Component {
 
   }
 
-  onSelectDevice(device) {
-    let curReports = this.props.reports.entities[device.deviceId];
+  onSelectProduct(product) {
+    let curReports = this.props.reports.entities[product.productId];
     if (!curReports) {
-      loadDeviceReports(device.deviceId);
+      this.props.loadProductReports(product.productId, 'today');
+      this.props.loadProductReports(product.productId, 'week');
     } else {
       this.setState({curReports});
     }
-    this.setState({curProduct: device});
+    this.setState({curProduct: product});
   }
 
   render() {
@@ -56,7 +61,7 @@ class DeviceReports extends Component {
     let productsData = [];
     for (let data of Object.values(props.products.entities)) {
       productsData.push({
-        key: data.deviceId,
+        key: data.productId,
         ...data
       });
     }
@@ -86,7 +91,7 @@ class DeviceReports extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
-            data: state.curReports ? state.curReports.week.activated : [],
+            data: state.curReports && state.curReports.week.activated ? state.curReports.week.activated : [],
             spanGaps: false
           }
         ]
@@ -109,7 +114,7 @@ class DeviceReports extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
-            data: state.curReports ? state.curReports.week.installed : [],
+            data: state.curReports && state.curReports.week.installed ? state.curReports.week.installed : [],
             spanGaps: false
           }
         ]
@@ -132,7 +137,7 @@ class DeviceReports extends Component {
             pointHoverBorderWidth: 2,
             pointRadius: 2,
             pointHitRadius: 10,
-            data: state.curReports ? state.curReports.week.connected : [],
+            data: state.curReports && state.curReports.week.connected ? state.curReports.week.connected : [],
             spanGaps: false
           }
         ]
@@ -142,10 +147,10 @@ class DeviceReports extends Component {
       <div className="reports">
         <div className="tool-bar">
           <div className="search-tool">
-            <SearchInput placeholder="选择设备"
+            <SearchInput placeholder="选择产品"
                          autoComplete={true}
                          dataSource={productsData}
-                         onSelect={this.onSelectDevice}
+                         onSelect={this.onSelectProduct}
             />
           </div>
           {state.curProduct &&
@@ -167,8 +172,8 @@ class DeviceReports extends Component {
             <div className="row">
               <div className="capsule col-lg-6">
                 <div className="number">
-                  {state.curReports ?
-                    state.curReports.today.activated : 0}
+                  {state.curReports && state.curReports.today.activated[0] ? 
+                    state.curReports.today.activated[0] : 0}
                 </div>
                 <div className="text">
                   <div className="title">设备激活</div>
@@ -177,8 +182,8 @@ class DeviceReports extends Component {
               </div>
               <div className="capsule col-lg-offset-2 col-lg-6">
                 <div className="number">
-                  {state.curReports ?
-                    state.curReports.today.installed : 0}
+                  {state.curReports && state.curReports.today.installed[0] ?
+                    state.curReports.today.installed[0] : 0}
                 </div>
                 <div className="text">
                   <div className="title">设备分发</div>
@@ -187,8 +192,8 @@ class DeviceReports extends Component {
               </div>
               <div className="capsule col-lg-offset-2 col-lg-6">
                 <div className="number">
-                  {state.curReports ?
-                    state.curReports.today.connected : 0}
+                  {state.curReports && state.curReports.today.connected[0] ?
+                    state.curReports.today.connected[0] : 0}
                 </div>
                 <div className="text">
                   <div className="title">设备连接</div>
@@ -217,7 +222,7 @@ class DeviceReports extends Component {
                       <LineChart data={chartData.activated} options={chartOptions}/>
                     </div>
                     :
-                    <Loading>未选择产品</Loading>
+                    <Loading>无数据</Loading>
                   }
                 </div>
               </div>
@@ -231,7 +236,7 @@ class DeviceReports extends Component {
                       <LineChart data={chartData.installed} options={chartOptions}/>
                     </div>
                     :
-                    <Loading>未选择产品</Loading>
+                    <Loading>无数据</Loading>
                   }
                 </div>
               </div>
@@ -247,7 +252,7 @@ class DeviceReports extends Component {
                       <LineChart data={chartData.connected} options={chartOptions}/>
                     </div>
                     :
-                    <Loading>未选择产品</Loading>
+                    <Loading>无数据</Loading>
                   }
                 </div>
               </div>
@@ -266,14 +271,12 @@ function mapStateToProps(state) {
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {};
-}
-
 DeviceReports.propTypes = {
 };
 
 DeviceReports.defaultProps = {
 };
 
-export default connect(mapStateToProps)(DeviceReports)
+export default connect(mapStateToProps, {
+  loadProductReports
+})(DeviceReports)

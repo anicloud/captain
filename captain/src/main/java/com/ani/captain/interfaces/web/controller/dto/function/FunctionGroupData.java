@@ -7,8 +7,12 @@ public class FunctionGroupData {
     public String groupId;
     public String name;
 
+    public FunctionGroupData() {
+    }
+
     public FunctionGroupData(String groupId, String name) {
         this.groupId = groupId;
         this.name = name;
     }
+
 }

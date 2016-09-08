@@ -5,64 +5,78 @@ import React, {PropTypes, Component} from 'react';
 import {connect} from 'react-redux';
 import {push} from 'react-router-redux';
 import MdClose from 'react-icons/lib/md/close';
-import Modal from '../../components/Modal';
-import SearchInput from '../../components/SearchInput';
-
+import Modal from 'components/Modal';
+import SearchInput from 'components/SearchInput';
+import {dateFormat} from 'components/utils';
+import {updateProduct} from './actions';
 import './DeviceProductsList.less';
 
 class DeviceProductsList extends Component {
   constructor(props) {
     super(props);
-    this.onCreateDevice = this.onCreateDevice.bind(this);
+    this.onAddProduct = this.onAddProduct.bind(this);
+    this.onUpdate = this.onUpdate.bind(this);
     this.onCancel = this.onCancel.bind(this);
     this.onGotoDetails = this.onGotoDetails.bind(this);
+    this.onFilter = this.onFilter.bind(this);
     this.state = {
-      addingDevice: false,
+      addingProduct: false,
       filter: '',
-      visibleDevices: []
+      visibleProducts: []
     };
   }
-  
+
   componentDidMount() {
-    let visibleDevices = [];
-    for (let entity of Object.values(this.props.products.entities)) {
-      visibleDevices.push(entity);
-    }
-    this.setState({visibleDevices})
+    this.setState({visibleProducts: Object.values(this.props.products.entities)});
   }
 
-  onCreateDevice(e) {
-    let addingDevice = this.state.addingDevice;
-    if (!addingDevice) {
-      addingDevice = true;
-      this.setState({addingDevice});
-    }
+  componentWillReceiveProps(nextProps) {
+    this.setState({visibleProducts: Object.values(nextProps.products.entities)});
   }
 
-  onCancel(e) {
-    let addingDevice = this.state.addingDevice;
-    if (addingDevice) {
-      addingDevice = false;
-      this.setState({addingDevice});
+  onAddProduct() {
+    let addingProduct = this.state.addingProduct;
+    if (!addingProduct) {
+      addingProduct = true;
+      this.setState({addingProduct});
     }
   }
 
-  onGotoDetails(appId, e) {
-    const url = '/device/products/' + appId;
-    this.props.dispatch(push(url));
+  onUpdate() {
+    let addingProduct = this.state.addingProduct;
+    if (addingProduct) {
+      this.props.updateProduct({
+        name: this.refs.name.value,
+        description: this.refs.description.value
+      });
+      addingProduct = false;
+      this.setState({addingProduct});
+    }
+  }
+
+  onCancel() {
+    let addingProduct = this.state.addingProduct;
+    if (addingProduct) {
+      addingProduct = false;
+      this.setState({addingProduct});
+    }
+  }
+
+  onGotoDetails(productId) {
+    const url = '/device/products/' + productId;
+    this.props.push(url);
   }
 
   onFilter(str) {
     str = str ? str.trim() : '';
-    let visibleDevices = [];
+    let visibleProducts = [];
     for (let entity of Object.values(this.props.products.entities)) {
       if (str.length === 0 || entity.name.includes(str)) {
-        visibleDevices.push(entity);
+        visibleProducts.push(entity);
       }
     }
-    this.setState({visibleDevices});
+    this.setState({visibleProducts});
   }
-  
   render() {
     const state = this.state;
     const props = this.props;
@@ -74,7 +88,7 @@ class DeviceProductsList extends Component {
             <SearchInput placeholder="输入过滤条件" onChange={this.onFilter}/>
           </div>
           <div className="add-tool">
-            <button className="btn btn-default" onClick={this.onCreateDevice}>添加设备</button>
+            <button className="btn btn-default" onClick={this.onAddProduct}>添加设备</button>
           </div>
         </div>
         <div className="device-list">
@@ -90,20 +104,20 @@ class DeviceProductsList extends Component {
             </tr>
             </thead>
             <tbody>
-            {state.visibleDevices.map(device => {
+            {state.visibleProducts.map(product => {
               return (
-                <tr key={device.deviceId} onClick={(e) => {this.onGotoDetails(device.deviceId, e)}}>
+                <tr key={product.productId} onClick={(e) => {this.onGotoDetails(product.productId)}}>
                   <td>
                     <div className="name">
-                      <span><img src={device.logo}/></span>
-                      <span>{device.name || '-'}</span>
+                      <span><img src={product.logo}/></span>
+                      <span>{product.name || '-'}</span>
                     </div>
                   </td>
-                  <td>{device.version || '-'}</td>
-                  <td>{device.installedCount || '-'}</td>
-                  <td>{device.stars || '-'}/{device.totalComments || '-'}</td>
-                  <td>{device.lastModTime || '-'}</td>
-                  <td>{device.state}</td>
+                  <td>{product.version || '-'}</td>
+                  <td>{product.installed || '-'}</td>
+                  <td>{product.stars || '-'}/{product.totalComments || '-'}</td>
+                  <td>{dateFormat(product.lastModTime, 'yyyy-MM-dd') || '-'}</td>
+                  <td>{product.state}</td>
                 </tr>
               )
             })}
@@ -111,16 +125,19 @@ class DeviceProductsList extends Component {
           </table>
         </div>
         {
-          state.addingDevice &&
-          <Modal className="device-add-modal">
+          state.addingProduct &&
+          <Modal className="add-product-modal">
             <div className="close" onClick={this.onCancel}><MdClose/></div>
-            <div className="modal-title">添加设备</div>
+            <div className="modal-title">添加产品</div>
             <div className="modal-content">
               <div className="form">
-                <input type="text" placeholder="设备名称"/>
+                <input type="text" ref="name" placeholder="产品名称"/>
+              </div>
+              <div className="form">
+                <input type="text" ref="description" placeholder="产品描述"/>
               </div>
               <div className="action">
-                <button className="btn btn-default">保存</button>
+                <button className="btn btn-default" onClick={this.onUpdate}>保存</button>
               </div>
             </div>
           </Modal>
@@ -142,4 +159,7 @@ DeviceProductsList.propTypes = {
 DeviceProductsList.defaultProps = {
 };
 
-export default connect(mapStateToProps)(DeviceProductsList)
+export default connect(mapStateToProps, {
+  push,
+  updateProduct
+})(DeviceProductsList)
